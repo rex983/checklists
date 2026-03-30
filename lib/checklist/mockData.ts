@@ -7,7 +7,7 @@ export const defaultManufacturers: ManufacturerInfo[] = [
     phone: '(800) 283-2453',
     email: 'orders@eaglecarports.com',
     contactName: 'Eagle Carports Team',
-    logoUrl: '/logos/Eagle-Carports.png',
+    logoUrl: '/logos/Eagle-Carports.jpeg',
   },
   {
     id: 'asci',
@@ -71,7 +71,7 @@ export const defaultManufacturers: ManufacturerInfo[] = [
     phone: '(800) 555-0109',
     email: 'orders@tbs.com',
     contactName: 'TBS Team',
-    logoUrl: '/logos/TBS.png',
+    logoUrl: '/logos/TBS.jpeg',
   },
 ]
 
