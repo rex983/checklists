@@ -9,7 +9,7 @@ function escapeHtml(text: string): string {
     .replace(/"/g, '&quot;')
 }
 
-export function renderChecklistEmail(checklist: ChecklistContent): string {
+export function renderChecklistEmail(checklist: ChecklistContent, pdfUrl?: string): string {
   const stepsHtml = checklist.steps
     .map((step, i) => {
       const color = STEP_COLORS[i % STEP_COLORS.length]
@@ -120,6 +120,16 @@ export function renderChecklistEmail(checklist: ChecklistContent): string {
 
           <!-- Steps -->
 ${stepsHtml}
+
+          <!-- Download PDF Button -->
+          <tr>
+            <td style="padding:8px 40px 24px;text-align:center;">
+              <a href="${pdfUrl || '#'}" style="display:inline-block;background:linear-gradient(135deg,#059669 0%,#10b981 100%);color:#ffffff;font-size:15px;font-weight:700;text-decoration:none;padding:14px 32px;border-radius:8px;">
+                📄 Download Printable PDF
+              </a>
+              <p style="margin:8px 0 0;color:#94a3b8;font-size:11px;">Save or print your checklist for easy reference</p>
+            </td>
+          </tr>
 
           <!-- Contact Footer -->
           <tr>
