@@ -55,7 +55,7 @@ export function renderChecklistEmail(checklist: ChecklistContent): string {
     : ''
 
   const mfgLogoHtml = checklist.manufacturer.logoUrl
-    ? `<img src="${escapeHtml(checklist.manufacturer.logoUrl)}" alt="${escapeHtml(checklist.manufacturer.name)}" style="width:48px;height:48px;object-fit:contain;border-radius:6px;" />`
+    ? `<img src="${escapeHtml(checklist.manufacturer.logoUrl)}" alt="${escapeHtml(checklist.manufacturer.name)}" style="width:72px;height:72px;object-fit:contain;border-radius:8px;" />`
     : ''
 
   return `<!DOCTYPE html>

@@ -9,6 +9,7 @@ import { ChecklistContent, FoundationType, PermitStatus, DrawingType, Manufactur
 import { STEP_COLORS } from '@/lib/checklist/colors'
 import { useToast } from '@/components/checklist/Toast'
 import Image from 'next/image'
+import { generateChecklistPDF } from '@/components/checklist/ChecklistPDF'
 
 const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
 const PERMIT_STATUSES: PermitStatus[] = ['No Permit', 'Pulling a Permit']
@@ -116,6 +117,27 @@ export function ChecklistDashboard() {
               Preview Email
             </button>
             <button
+              onClick={async () => {
+                showToast('Generating PDF...', 'info')
+                try {
+                  const blob = await generateChecklistPDF(checklist)
+                  const url = URL.createObjectURL(blob)
+                  const a = document.createElement('a')
+                  a.href = url
+                  a.download = `Checklist-${checklist.orderNumber}.pdf`
+                  a.click()
+                  URL.revokeObjectURL(url)
+                  showToast('PDF downloaded!', 'success')
+                } catch {
+                  showToast('PDF generation failed', 'error')
+                }
+              }}
+              className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors cursor-pointer"
+              style={{ background: '#059669' }}
+            >
+              Download PDF
+            </button>
+            <button
               onClick={() => showToast(`Email would be sent to ${checklist.customerEmail}`, 'info')}
               className="px-4 py-2 rounded-lg text-sm font-medium border transition-colors opacity-60 cursor-not-allowed"
               style={{ borderColor: 'var(--input-border)', color: 'var(--text-secondary)' }}
@@ -199,23 +221,23 @@ export function ChecklistDashboard() {
             style={{ background: 'var(--background)' }}
           >
             {checklist.manufacturer.logoUrl && (
-              <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-white flex items-center justify-center border" style={{ borderColor: 'var(--table-border)' }}>
+              <div className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-white flex items-center justify-center border-2" style={{ borderColor: 'var(--table-border)' }}>
                 <Image
                   src={checklist.manufacturer.logoUrl}
                   alt={checklist.manufacturer.name}
-                  width={64}
-                  height={64}
-                  className="object-contain w-full h-full p-1"
+                  width={96}
+                  height={96}
+                  className="object-contain w-full h-full p-2"
                   unoptimized
                 />
               </div>
             )}
-            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
-              <p className="font-semibold text-base mb-0.5" style={{ color: 'var(--text-primary)' }}>
+            <div style={{ color: 'var(--text-secondary)' }}>
+              <p className="font-bold text-lg mb-0.5" style={{ color: 'var(--text-primary)' }}>
                 {checklist.manufacturer.name}
               </p>
-              <p>{checklist.manufacturer.contactName} &bull; {checklist.manufacturer.phone}</p>
-              <p>{checklist.manufacturer.email}</p>
+              <p className="text-sm">{checklist.manufacturer.contactName} &bull; {checklist.manufacturer.phone}</p>
+              <p className="text-sm">{checklist.manufacturer.email}</p>
             </div>
           </div>
 
