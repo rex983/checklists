@@ -2,44 +2,45 @@ import { FoundationType, PermitStatus, DrawingType, ChecklistStep } from './type
 
 const SUCCESS_TEAM_PHONE = '(813) 692-7320'
 const SUCCESS_TEAM_EMAIL = 'SuccessTeam@bigbuildingsdirect.com'
-const SUCCESS_TEAM_NAME = 'our Success Team'
-const SUCCESS_TEAM_CONTACT = `Success Team: ${SUCCESS_TEAM_PHONE} | ${SUCCESS_TEAM_EMAIL}`
 
 // Step 1: Permitting — varies by permitStatus + drawingType
 const permitSteps: Record<string, (vars: TemplateVars) => ChecklistStep> = {
   'No Permit': (vars) => ({
     stepNumber: 1,
-    title: 'Permitting — Not Required',
-    icon: '✓',
-    paragraphs: [
-      `Great news, ${vars.customerFirstName}! Based on your project needs, no building permit is required for your structure.`,
-      'You can move directly to land preparation while your building is being fabricated.',
-      `If your local jurisdiction contacts you or you have questions, reach out to ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} or ${SUCCESS_TEAM_EMAIL}.`,
-      SUCCESS_TEAM_CONTACT,
+    title: 'Permitting',
+    icon: '📋',
+    timelineLabel: 'No action needed',
+    action: 'No permit required — move directly to land preparation!',
+    bullets: [
+      `Based on your project needs, no building permit is required for your structure.`,
+      'You can skip ahead and start preparing your land while your building is being fabricated.',
+      `If your local jurisdiction contacts you, reach out to ${SUCCESS_TEAM_EMAIL} or call ${SUCCESS_TEAM_PHONE}.`,
     ],
   }),
   'Pulling a Permit|Generic': (vars) => ({
     stepNumber: 1,
     title: 'Permitting — Generic Drawings',
     icon: '📋',
-    paragraphs: [
-      `${vars.customerFirstName}, your order requires a building permit. We will provide generic engineering drawings for your permit application.`,
-      'Generic drawings are pre-engineered for your building size and local wind/snow loads. They are accepted by most jurisdictions.',
-      `Your drawings will be sent to ${vars.customerEmail} within 5-7 business days of fabrication start. Contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} for status updates.`,
-      'Submit your permit application as soon as you receive the drawings — processing times vary by county.',
-      SUCCESS_TEAM_CONTACT,
+    timelineLabel: 'Weeks 1–2',
+    action: 'Submit your permit application as soon as you receive your drawings.',
+    bullets: [
+      'Your order requires a building permit — we will provide generic engineering drawings.',
+      'Generic drawings are pre-engineered for your building size and local wind/snow loads, accepted by most jurisdictions.',
+      `Drawings will be emailed to ${vars.customerEmail} within 5–7 business days of fabrication start.`,
+      'Processing times vary by county, so submit early!',
     ],
   }),
   'Pulling a Permit|As-Built': (vars) => ({
     stepNumber: 1,
-    title: 'Permitting — Site-Specific (As-Built) Drawings',
+    title: 'Permitting — As-Built Drawings',
     icon: '📐',
-    paragraphs: [
-      `${vars.customerFirstName}, your order requires a building permit with site-specific (as-built) engineering drawings.`,
-      'As-built drawings are custom-engineered for your exact site conditions, including foundation details, setbacks, and local code requirements.',
-      `These drawings typically take 10-14 business days. They will be sent to ${vars.customerEmail}. Contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} for status.`,
-      'Important: Do NOT submit your permit application until you receive the finalized as-built drawings, as they may differ from standard templates.',
-      SUCCESS_TEAM_CONTACT,
+    timelineLabel: 'Weeks 1–3',
+    action: 'Wait for your finalized as-built drawings before submitting your permit.',
+    bullets: [
+      'Your order requires site-specific (as-built) engineering drawings for your permit.',
+      'These are custom-engineered for your exact site conditions — foundation details, setbacks, and local code requirements.',
+      `As-built drawings typically take 10–14 business days and will be emailed to ${vars.customerEmail}.`,
+      'Do NOT submit your permit application until you receive the finalized drawings, as they may differ from standard templates.',
     ],
   }),
 }
@@ -48,101 +49,115 @@ const permitSteps: Record<string, (vars: TemplateVars) => ChecklistStep> = {
 const landPrepSteps: Record<FoundationType, (vars: TemplateVars) => ChecklistStep> = {
   'Concrete': (vars) => ({
     stepNumber: 2,
-    title: 'Land Preparation — Concrete Foundation',
-    icon: '🏗️',
-    paragraphs: [
-      `${vars.customerFirstName}, your building requires a concrete slab or pad foundation. This must be completed BEFORE your delivery date.`,
-      'Requirements: The concrete pad must be level (within 1/4" over 10 feet), properly cured (minimum 7 days, ideally 28), and sized to your building dimensions plus 2" overhang on each side.',
-      'Hire a licensed concrete contractor in your area. Share your building dimensions and any engineering drawings with them.',
-      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
-      SUCCESS_TEAM_CONTACT,
+    title: 'Land Prep — Concrete Foundation',
+    icon: '🏗',
+    timelineLabel: 'Weeks 2–6',
+    action: `Hire a concrete contractor and complete your pad before delivery day.`,
+    bullets: [
+      'Your building requires a concrete slab or pad foundation — this must be done BEFORE delivery.',
+      'Pad must be level (within 1/4" over 10 feet), properly cured (min 7 days, ideally 28), and sized to your building dimensions plus 2" overhang per side.',
+      'Share your building dimensions and any engineering drawings with your contractor.',
+      `${vars.mfgName} will be the installer for this building project.`,
+      `Once your land is ready, email ${SUCCESS_TEAM_EMAIL}.`,
     ],
   }),
   'Level Ground': (vars) => ({
     stepNumber: 2,
-    title: 'Land Preparation — Level Ground',
-    icon: '🏗️',
-    paragraphs: [
-      `${vars.customerFirstName}, your building will be installed directly on level ground with earth anchors.`,
-      'Requirements: The installation area must be cleared of debris, vegetation, and large rocks. The ground should be level within 3" across the building footprint.',
-      'If your site has a slope, you may need to grade the area. A local excavation contractor can typically complete this in 1-2 days.',
-      'The installation crew will bring earth anchors. Ensure the crew has clear access to the site with at least 14 feet of clearance for delivery trucks.',
-      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
-      SUCCESS_TEAM_CONTACT,
+    title: 'Land Prep — Level Ground',
+    icon: '🏗',
+    timelineLabel: 'Weeks 2–4',
+    action: 'Clear and level your site, then notify us when it\'s ready.',
+    bullets: [
+      'Your building will be installed directly on level ground with earth anchors.',
+      'Clear the area of debris, vegetation, and large rocks — ground should be level within 3" across the footprint.',
+      'If your site has a slope, a local excavation contractor can typically grade it in 1–2 days.',
+      'Ensure at least 14 feet of clearance for delivery trucks.',
+      `${vars.mfgName} will be the installer for this building project.`,
+      `Once your land is ready, email ${SUCCESS_TEAM_EMAIL}.`,
     ],
   }),
   'Stem Wall': (vars) => ({
     stepNumber: 2,
-    title: 'Land Preparation — Stem Wall Foundation',
-    icon: '🏗️',
-    paragraphs: [
-      `${vars.customerFirstName}, your building requires a stem wall (raised perimeter) foundation. This is a more involved foundation and must be completed well before delivery.`,
-      'A stem wall foundation involves pouring a continuous concrete perimeter wall, typically 6-12" above grade, with embedded anchor bolts.',
-      'You will need a licensed concrete contractor experienced with metal building foundations. Share all engineering drawings and anchor bolt layouts with them.',
-      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
-      SUCCESS_TEAM_CONTACT,
+    title: 'Land Prep — Stem Wall Foundation',
+    icon: '🏗',
+    timelineLabel: 'Weeks 2–6',
+    action: 'Hire an experienced concrete contractor for your stem wall.',
+    bullets: [
+      'Your building requires a stem wall (raised perimeter) foundation — plan ahead, this takes time.',
+      'Involves pouring a continuous concrete perimeter wall, typically 6–12" above grade, with embedded anchor bolts.',
+      'Use a contractor experienced with metal building foundations and share all engineering drawings with them.',
+      `${vars.mfgName} will be the installer for this building project.`,
+      `Once your land is ready, email ${SUCCESS_TEAM_EMAIL}.`,
     ],
   }),
   'Mixed': (vars) => ({
     stepNumber: 2,
-    title: 'Land Preparation — Mixed Foundation',
-    icon: '🏗️',
-    paragraphs: [
-      `${vars.customerFirstName}, your building uses a mixed foundation approach (combination of concrete and ground-mounted sections).`,
-      'This typically means a concrete slab for part of the structure and earth anchors for the remainder. Review your engineering drawings carefully for the specific layout.',
-      'Coordinate with a concrete contractor for the slab portion. Ensure all concrete work is completed and cured before your scheduled delivery.',
-      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
-      SUCCESS_TEAM_CONTACT,
+    title: 'Land Prep — Mixed Foundation',
+    icon: '🏗',
+    timelineLabel: 'Weeks 2–6',
+    action: 'Coordinate concrete work for the slab portion and clear the rest.',
+    bullets: [
+      'Your building uses a mixed approach — concrete slab for part of the structure and earth anchors for the rest.',
+      'Review your engineering drawings carefully for the specific layout.',
+      'All concrete work must be completed and cured before your scheduled delivery.',
+      `${vars.mfgName} will be the installer for this building project.`,
+      `Once your land is ready, email ${SUCCESS_TEAM_EMAIL}.`,
     ],
   }),
   'Other': (vars) => ({
     stepNumber: 2,
-    title: 'Land Preparation — Custom Foundation',
-    icon: '🏗️',
-    paragraphs: [
-      `${vars.customerFirstName}, your building has a custom foundation requirement. Please review your order details and engineering drawings carefully.`,
-      'Ensure your site is cleared, level, and accessible for delivery trucks (minimum 14 feet clearance).',
-      'We recommend completing all foundation work at least 2 weeks before your scheduled delivery to allow for curing and inspections.',
-      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
-      SUCCESS_TEAM_CONTACT,
+    title: 'Land Prep — Custom Foundation',
+    icon: '🏗',
+    timelineLabel: 'Weeks 2–6',
+    action: `Contact us to confirm your exact foundation requirements.`,
+    bullets: [
+      'Your building has a custom foundation requirement — review your order details and engineering drawings carefully.',
+      'Ensure your site is cleared, level, and accessible for delivery trucks (min 14 feet clearance).',
+      'Complete all foundation work at least 2 weeks before delivery for curing and inspections.',
+      `${vars.mfgName} will be the installer for this building project.`,
+      `Once your land is ready, email ${SUCCESS_TEAM_EMAIL}.`,
     ],
   }),
 }
 
-// Step 3: Scheduling & Delivery — same structure, minor permit variation
+// Step 3: Scheduling & Delivery
 function getSchedulingStep(vars: TemplateVars): ChecklistStep {
-  const permitNote = vars.permitStatus === 'Pulling a Permit'
-    ? ' Make sure your building permit is approved (or at minimum submitted) before confirming your delivery date.'
-    : ''
+  const permitBullet = vars.permitStatus === 'Pulling a Permit'
+    ? 'Ensure your building permit is approved (or at minimum submitted) before confirming delivery.'
+    : null
+  const foundationBullet = vars.foundationType === 'Concrete' || vars.foundationType === 'Stem Wall'
+    ? 'Verify your foundation is complete, cured, and anchor bolts are in the correct positions.'
+    : 'Verify your site is level, cleared, and there are no underground utilities in anchor locations.'
 
   return {
     stepNumber: 3,
     title: 'Scheduling & Delivery',
     icon: '🚚',
-    paragraphs: [
-      `${vars.customerFirstName}, your building is estimated to ship within ${vars.estimatedWeeks} weeks from the fabrication start date.${permitNote}`,
-      `${vars.mfgName} will contact you at ${vars.customerEmail} to schedule your delivery and installation date. Please respond promptly to avoid delays.`,
-      'Before delivery day: Ensure the site is fully prepared, accessible, and clear of obstacles. The installation crew needs room to maneuver materials and equipment.',
-      vars.foundationType === 'Concrete' || vars.foundationType === 'Stem Wall'
-        ? 'Verify that your foundation is complete, cured, and that anchor bolts are in the correct positions before the crew arrives.'
-        : 'Verify that your site is level, cleared, and that there are no underground utilities in the anchor locations.',
-      SUCCESS_TEAM_CONTACT,
+    timelineLabel: `Week ${vars.estimatedWeeks - 2}–${vars.estimatedWeeks}`,
+    action: `Respond promptly when ${vars.mfgName} contacts you to schedule.`,
+    bullets: [
+      `Your building is estimated to ship within ${vars.estimatedWeeks} weeks from fabrication start.`,
+      `${vars.mfgName} will contact you at ${vars.customerEmail} to schedule delivery and installation.`,
+      ...(permitBullet ? [permitBullet] : []),
+      'Ensure the site is fully prepared, accessible, and clear of obstacles before delivery day.',
+      foundationBullet,
     ],
   }
 }
 
-// Step 4: What to Expect on Installation Day — universal
+// Step 4: Installation Day
 function getInstallationStep(vars: TemplateVars): ChecklistStep {
   return {
     stepNumber: 4,
     title: 'Installation Day',
     icon: '🔧',
-    paragraphs: [
-      `On installation day, the crew from ${vars.mfgName} will arrive with all building materials and hardware. A typical installation takes 1-3 days depending on building size.`,
-      'Please be available on-site (or have a representative present) for the first hour to walk the crew through site access, confirm placement, and address any questions.',
-      'The crew will handle all assembly. You do NOT need to provide tools, equipment, or additional labor unless otherwise specified in your order.',
-      `After installation, do a walkthrough with the crew. If you notice any issues, contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} or email ${SUCCESS_TEAM_EMAIL} within 48 hours.`,
-      SUCCESS_TEAM_CONTACT,
+    timelineLabel: `Week ${vars.estimatedWeeks}+`,
+    action: 'Be on-site for the first hour, then do a final walkthrough with the crew.',
+    bullets: [
+      `The crew from ${vars.mfgName} will arrive with all materials and hardware — typical install takes 1–3 days.`,
+      'Be available on-site (or have a representative) for the first hour to confirm placement and site access.',
+      'The crew handles all assembly — you do NOT need tools, equipment, or additional labor.',
+      `After installation, do a walkthrough. Any issues? Contact ${SUCCESS_TEAM_EMAIL} or call ${SUCCESS_TEAM_PHONE} within 48 hours.`,
     ],
   }
 }
@@ -173,20 +188,12 @@ export function getTemplateKey(
 }
 
 export function buildSteps(vars: TemplateVars): ChecklistStep[] {
-  // Step 1: Permit
   const permitKey = vars.permitStatus === 'No Permit'
     ? 'No Permit'
     : `Pulling a Permit|${vars.drawingType || 'Generic'}`
   const step1 = permitSteps[permitKey]!(vars)
-
-  // Step 2: Land prep
   const step2 = landPrepSteps[vars.foundationType](vars)
-
-  // Step 3: Scheduling
   const step3 = getSchedulingStep(vars)
-
-  // Step 4: Installation
   const step4 = getInstallationStep(vars)
-
   return [step1, step2, step3, step4]
 }

@@ -29,7 +29,9 @@ export interface ChecklistStep {
   stepNumber: number
   title: string
   icon: string
-  paragraphs: string[]
+  action: string          // the ONE thing they need to do
+  bullets: string[]       // scannable bullet points
+  timelineLabel: string   // e.g. "Weeks 1-2"
 }
 
 export interface ChecklistContent {

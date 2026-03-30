@@ -13,35 +13,43 @@ export function renderChecklistEmail(checklist: ChecklistContent): string {
   const stepsHtml = checklist.steps
     .map((step, i) => {
       const color = STEP_COLORS[i % STEP_COLORS.length]
-      const paragraphsHtml = step.paragraphs
+
+      const bulletsHtml = step.bullets
         .map(
-          (p) =>
-            `<p style="margin:0 0 12px;color:#555;font-size:14px;line-height:1.7;">${escapeHtml(p)}</p>`
+          (b) =>
+            `<li style="margin:0 0 8px;color:#555;font-size:14px;line-height:1.6;">${escapeHtml(b)}</li>`
         )
-        .join('\n              ')
+        .join('\n                    ')
 
       return `
           <!-- Step ${step.stepNumber} -->
           <tr>
-            <td style="padding:0 40px 32px;">
+            <td style="padding:0 40px 24px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
                 <tr>
-                  <td style="background:${color};padding:16px 24px;">
+                  <td style="background:${color};padding:14px 20px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td style="width:40px;">
-                          <span style="display:inline-block;width:32px;height:32px;background:rgba(255,255,255,0.2);border-radius:50%;text-align:center;line-height:32px;color:#fff;font-weight:700;font-size:14px;">${step.stepNumber}</span>
+                        <td style="width:36px;">
+                          <span style="display:inline-block;font-size:22px;line-height:1;">${step.icon}</span>
                         </td>
                         <td>
-                          <h2 style="margin:0;color:#ffffff;font-size:16px;font-weight:600;">${escapeHtml(step.title)}</h2>
+                          <h2 style="margin:0;color:#ffffff;font-size:15px;font-weight:700;">Step ${step.stepNumber}: ${escapeHtml(step.title)}</h2>
+                          <p style="margin:2px 0 0;color:rgba(255,255,255,0.8);font-size:11px;">${escapeHtml(step.timelineLabel)}</p>
                         </td>
                       </tr>
                     </table>
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:20px 24px 8px;">
-                    ${paragraphsHtml}
+                  <td style="padding:14px 20px 6px;">
+                    <div style="background:${color}0D;border-left:3px solid ${color};border-radius:4px;padding:10px 14px;margin-bottom:12px;">
+                      <p style="margin:0 0 2px;color:${color};font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Your Action</p>
+                      <p style="margin:0;color:#333;font-size:14px;font-weight:600;">${escapeHtml(step.action)}</p>
+                    </div>
+                    <ul style="margin:0;padding-left:20px;">
+                    ${bulletsHtml}
+                    </ul>
                   </td>
                 </tr>
               </table>
@@ -55,7 +63,7 @@ export function renderChecklistEmail(checklist: ChecklistContent): string {
     : ''
 
   const mfgLogoHtml = checklist.manufacturer.logoUrl
-    ? `<img src="${escapeHtml(checklist.manufacturer.logoUrl)}" alt="${escapeHtml(checklist.manufacturer.name)}" style="width:72px;height:72px;object-fit:contain;border-radius:8px;" />`
+    ? `<img src="${escapeHtml(checklist.manufacturer.logoUrl)}" alt="${escapeHtml(checklist.manufacturer.name)}" style="width:60px;height:60px;object-fit:contain;border-radius:8px;" />`
     : ''
 
   return `<!DOCTYPE html>
@@ -71,53 +79,38 @@ export function renderChecklistEmail(checklist: ChecklistContent): string {
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#1a3a5c 0%,#2563eb 100%);padding:32px 40px;text-align:center;">
-              <h1 style="margin:0;color:#ffffff;font-size:24px;font-weight:700;letter-spacing:-0.5px;">Big Buildings Direct</h1>
-              <p style="margin:8px 0 0;color:rgba(255,255,255,0.8);font-size:14px;">Your Next Steps Checklist</p>
+            <td style="background:linear-gradient(135deg,#1a3a5c 0%,#2563eb 100%);padding:28px 40px;text-align:center;">
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px;">Big Buildings Direct</h1>
+              <p style="margin:6px 0 0;color:rgba(255,255,255,0.8);font-size:13px;">Your Next Steps Checklist</p>
             </td>
           </tr>
 
-          <!-- Greeting -->
+          <!-- Manufacturer + Greeting -->
           <tr>
-            <td style="padding:32px 40px 8px;">
-              <p style="margin:0 0 8px;color:#333;font-size:16px;line-height:1.6;">
-                Hi <strong>${escapeHtml(checklist.customerName)}</strong>,
-              </p>
-              <p style="margin:0 0 4px;color:#555;font-size:15px;line-height:1.6;">
-                Congratulations! Your order <strong style="color:#1a3a5c;">${escapeHtml(checklist.orderNumber)}</strong> has been sent to <strong>${escapeHtml(checklist.manufacturer.name)}</strong> for fabrication.
-              </p>
-              <p style="margin:0 0 24px;color:#555;font-size:15px;line-height:1.6;">
-                Here's your personalized checklist to get everything ready for delivery and installation.
-              </p>
-            </td>
-          </tr>
-
-          <!-- Manufacturer Info -->
-          <tr>
-            <td style="padding:0 40px 16px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
+            <td style="padding:28px 40px 8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
                 <tr>
-                  <td style="padding:14px 20px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0">
-                      <tr>
-                        ${mfgLogoHtml ? `<td style="padding-right:14px;vertical-align:middle;">${mfgLogoHtml}</td>` : ''}
-                        <td style="vertical-align:middle;">
-                          <p style="margin:0 0 2px;font-size:15px;font-weight:600;color:#1a3a5c;">${escapeHtml(checklist.manufacturer.name)}</p>
-                          <p style="margin:0;font-size:13px;color:#555;">${escapeHtml(checklist.manufacturer.contactName)} &bull; ${escapeHtml(checklist.manufacturer.phone)}</p>
-                          <p style="margin:0;font-size:13px;color:#555;">${escapeHtml(checklist.manufacturer.email)}</p>
-                        </td>
-                      </tr>
-                    </table>
+                  ${mfgLogoHtml ? `<td style="width:72px;padding-right:14px;vertical-align:middle;">${mfgLogoHtml}</td>` : ''}
+                  <td style="vertical-align:middle;">
+                    <p style="margin:0 0 2px;font-size:16px;font-weight:700;color:#1a3a5c;">${escapeHtml(checklist.manufacturer.name)}</p>
+                    <p style="margin:0;font-size:12px;color:#555;">${escapeHtml(checklist.manufacturer.contactName)} &bull; ${escapeHtml(checklist.manufacturer.phone)}</p>
+                    <p style="margin:0;font-size:12px;color:#555;">${escapeHtml(checklist.manufacturer.email)}</p>
                   </td>
                 </tr>
               </table>
+              <p style="margin:0 0 6px;color:#333;font-size:16px;line-height:1.5;">
+                Hi <strong>${escapeHtml(checklist.customerName)}</strong> 👋
+              </p>
+              <p style="margin:0 0 20px;color:#555;font-size:14px;line-height:1.5;">
+                Congratulations! Your order <strong style="color:#1a3a5c;">${escapeHtml(checklist.orderNumber)}</strong> has been sent to <strong>${escapeHtml(checklist.manufacturer.name)}</strong> for fabrication. Follow these 4 steps to get ready:
+              </p>
             </td>
           </tr>
 
           <!-- Order Summary Badge -->
           <tr>
-            <td style="padding:0 40px 24px;">
-              <div style="background:#f0f4ff;border-radius:8px;padding:14px 20px;font-size:13px;color:#1a3a5c;">
+            <td style="padding:0 40px 20px;">
+              <div style="background:#f0f4ff;border-radius:8px;padding:12px 18px;font-size:12px;color:#1a3a5c;">
                 <strong>Order:</strong> ${escapeHtml(checklist.orderNumber)} &bull;
                 <strong>Foundation:</strong> ${escapeHtml(checklist.foundationType)} &bull;
                 <strong>Permit:</strong> ${escapeHtml(checklist.permitStatus)}${drawingLine}
@@ -130,21 +123,21 @@ ${stepsHtml}
 
           <!-- Contact Footer -->
           <tr>
-            <td style="padding:16px 40px 32px;">
-              <hr style="border:none;border-top:1px solid #e2e8f0;margin:0 0 20px;">
-              <p style="margin:0 0 8px;color:#333;font-size:14px;font-weight:600;">Questions?</p>
-              <p style="margin:0;color:#555;font-size:13px;line-height:1.7;">
+            <td style="padding:8px 40px 28px;">
+              <hr style="border:none;border-top:1px solid #e2e8f0;margin:0 0 16px;">
+              <p style="margin:0 0 6px;color:#333;font-size:14px;font-weight:600;">Questions? We're here to help!</p>
+              <p style="margin:0;color:#555;font-size:13px;line-height:1.6;">
                 Contact our <strong>Success Team</strong> at
-                <a href="tel:8136927320" style="color:#2563eb;">(813) 692-7320</a> or
-                <a href="mailto:SuccessTeam@bigbuildingsdirect.com" style="color:#2563eb;">SuccessTeam@bigbuildingsdirect.com</a>
+                <a href="tel:8136927320" style="color:#2563eb;font-weight:600;">(813) 692-7320</a> or
+                <a href="mailto:SuccessTeam@bigbuildingsdirect.com" style="color:#2563eb;font-weight:600;">SuccessTeam@bigbuildingsdirect.com</a>
               </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="background-color:#f8fafc;padding:24px 40px;text-align:center;border-top:1px solid #e2e8f0;">
-              <p style="margin:0;color:#94a3b8;font-size:12px;">
+            <td style="background-color:#f8fafc;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
+              <p style="margin:0;color:#94a3b8;font-size:11px;">
                 Big Buildings Direct &bull; Customer Checklist
               </p>
             </td>

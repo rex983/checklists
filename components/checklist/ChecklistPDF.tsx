@@ -14,7 +14,6 @@ const s = StyleSheet.create({
     fontSize: 8,
     color: '#333',
   },
-  // Header — compact single row
   header: {
     backgroundColor: '#1a3a5c',
     borderRadius: 4,
@@ -24,21 +23,9 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  headerTitle: {
-    color: '#fff',
-    fontSize: 13,
-    fontFamily: 'Helvetica-Bold',
-  },
-  headerSub: {
-    color: 'rgba(255,255,255,0.7)',
-    fontSize: 8,
-  },
-  // Manufacturer + order info in one row
-  infoRow: {
-    flexDirection: 'row',
-    marginBottom: 6,
-    gap: 8,
-  },
+  headerTitle: { color: '#fff', fontSize: 13, fontFamily: 'Helvetica-Bold' },
+  headerSub: { color: 'rgba(255,255,255,0.7)', fontSize: 8 },
+  infoRow: { flexDirection: 'row', marginBottom: 6, gap: 8 },
   mfgBox: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -49,20 +36,9 @@ const s = StyleSheet.create({
     flex: 1,
     gap: 8,
   },
-  mfgLogo: {
-    width: 36,
-    height: 36,
-    objectFit: 'contain',
-  },
-  mfgName: {
-    fontSize: 9,
-    fontFamily: 'Helvetica-Bold',
-    color: '#1a3a5c',
-  },
-  mfgDetail: {
-    fontSize: 7,
-    color: '#555',
-  },
+  mfgLogo: { width: 36, height: 36, objectFit: 'contain' },
+  mfgName: { fontSize: 9, fontFamily: 'Helvetica-Bold', color: '#1a3a5c' },
+  mfgDetail: { fontSize: 7, color: '#555' },
   orderBox: {
     backgroundColor: '#f0f4ff',
     borderRadius: 4,
@@ -70,28 +46,11 @@ const s = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
   },
-  orderLabel: {
-    fontSize: 7,
-    color: '#1a3a5c',
-    fontFamily: 'Helvetica-Bold',
-  },
-  orderVal: {
-    fontSize: 7,
-    color: '#1a3a5c',
-  },
-  // Greeting — 2 lines max
-  greeting: {
-    marginBottom: 6,
-  },
-  greetingText: {
-    fontSize: 8,
-    lineHeight: 1.4,
-    color: '#444',
-  },
-  greetingBold: {
-    fontFamily: 'Helvetica-Bold',
-  },
-  // Steps
+  orderLabel: { fontSize: 7, color: '#1a3a5c', fontFamily: 'Helvetica-Bold' },
+  orderVal: { fontSize: 7, color: '#1a3a5c' },
+  greeting: { marginBottom: 6 },
+  greetingText: { fontSize: 8, lineHeight: 1.4, color: '#444' },
+  greetingBold: { fontFamily: 'Helvetica-Bold' },
   stepCard: {
     borderRadius: 4,
     border: '0.5px solid #e2e8f0',
@@ -102,43 +61,24 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: '4 8',
-    gap: 6,
+    gap: 5,
   },
-  stepNum: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: 'rgba(255,255,255,0.25)',
-    alignItems: 'center',
-    justifyContent: 'center',
+  stepIcon: { fontSize: 10 },
+  stepTitle: { color: '#fff', fontSize: 8, fontFamily: 'Helvetica-Bold', flex: 1 },
+  stepTimeline: { color: 'rgba(255,255,255,0.75)', fontSize: 6.5 },
+  stepBody: { padding: '5 8 4' },
+  actionBox: {
+    borderRadius: 3,
+    padding: '4 6',
+    marginBottom: 4,
+    flexDirection: 'row',
+    gap: 4,
   },
-  stepNumText: {
-    color: '#fff',
-    fontSize: 7,
-    fontFamily: 'Helvetica-Bold',
-  },
-  stepTitle: {
-    color: '#fff',
-    fontSize: 8.5,
-    fontFamily: 'Helvetica-Bold',
-  },
-  stepBody: {
-    padding: '5 8 4',
-  },
-  para: {
-    fontSize: 7.5,
-    lineHeight: 1.45,
-    color: '#555',
-    marginBottom: 3,
-  },
-  contactLine: {
-    fontSize: 7,
-    lineHeight: 1.3,
-    color: '#1a3a5c',
-    fontFamily: 'Helvetica-Bold',
-    marginTop: 1,
-  },
-  // Footer
+  actionLabel: { fontSize: 6, fontFamily: 'Helvetica-Bold', textTransform: 'uppercase' },
+  actionText: { fontSize: 7.5, fontFamily: 'Helvetica-Bold', color: '#333', flex: 1 },
+  bullet: { fontSize: 7, lineHeight: 1.45, color: '#555', marginBottom: 2, paddingLeft: 8 },
+  bulletDot: { fontSize: 7, color: '#999', position: 'absolute', left: 0 },
+  bulletRow: { flexDirection: 'row', marginBottom: 2 },
   footer: {
     marginTop: 'auto',
     borderTop: '0.5px solid #e2e8f0',
@@ -147,19 +87,9 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  footerLeft: {
-    fontSize: 7,
-    color: '#555',
-  },
-  footerBold: {
-    fontSize: 7,
-    color: '#1a3a5c',
-    fontFamily: 'Helvetica-Bold',
-  },
-  footerRight: {
-    fontSize: 6.5,
-    color: '#94a3b8',
-  },
+  footerLeft: { fontSize: 7, color: '#555' },
+  footerBold: { fontSize: 7, color: '#1a3a5c', fontFamily: 'Helvetica-Bold' },
+  footerRight: { fontSize: 6.5, color: '#94a3b8' },
 })
 
 function ChecklistDocument({ checklist }: { checklist: ChecklistContent }) {
@@ -168,13 +98,11 @@ function ChecklistDocument({ checklist }: { checklist: ChecklistContent }) {
   return (
     <Document>
       <Page size="LETTER" style={s.page}>
-        {/* Header */}
         <View style={s.header}>
           <Text style={s.headerTitle}>Big Buildings Direct</Text>
           <Text style={s.headerSub}>Customer Checklist</Text>
         </View>
 
-        {/* Manufacturer + Order Info side by side */}
         <View style={s.infoRow}>
           <View style={s.mfgBox}>
             {checklist.manufacturer.logoUrl && !checklist.manufacturer.logoUrl.startsWith('data:') && (
@@ -193,36 +121,39 @@ function ChecklistDocument({ checklist }: { checklist: ChecklistContent }) {
           </View>
         </View>
 
-        {/* Greeting — condensed */}
         <View style={s.greeting}>
           <Text style={s.greetingText}>
-            Hi <Text style={s.greetingBold}>{checklist.customerName}</Text> — Your order <Text style={s.greetingBold}>{checklist.orderNumber}</Text> has been sent to <Text style={s.greetingBold}>{checklist.manufacturer.name}</Text> for fabrication. Here are your next steps:
+            Hi <Text style={s.greetingBold}>{checklist.customerName}</Text> — Your order <Text style={s.greetingBold}>{checklist.orderNumber}</Text> has been sent to <Text style={s.greetingBold}>{checklist.manufacturer.name}</Text> for fabrication. Follow these 4 steps to get ready:
           </Text>
         </View>
 
-        {/* Steps */}
         {checklist.steps.map((step, i) => {
           const color = STEP_COLORS[i % STEP_COLORS.length]
-          // Filter out the "Success Team:" contact line — we show it once at bottom
-          const paragraphs = step.paragraphs.filter(p => !p.startsWith('Success Team:'))
           return (
             <View key={step.stepNumber} style={s.stepCard}>
               <View style={[s.stepHeader, { backgroundColor: color }]}>
-                <View style={s.stepNum}>
-                  <Text style={s.stepNumText}>{step.stepNumber}</Text>
-                </View>
-                <Text style={s.stepTitle}>{step.title}</Text>
+                <Text style={s.stepIcon}>{step.icon}</Text>
+                <Text style={s.stepTitle}>Step {step.stepNumber}: {step.title}</Text>
+                <Text style={s.stepTimeline}>{step.timelineLabel}</Text>
               </View>
               <View style={s.stepBody}>
-                {paragraphs.map((p, j) => (
-                  <Text key={j} style={s.para}>{p}</Text>
+                <View style={[s.actionBox, { backgroundColor: `${color}11`, borderLeft: `2px solid ${color}` }]}>
+                  <View>
+                    <Text style={[s.actionLabel, { color }]}>Your Action</Text>
+                    <Text style={s.actionText}>{step.action}</Text>
+                  </View>
+                </View>
+                {step.bullets.map((b, j) => (
+                  <View key={j} style={s.bulletRow}>
+                    <Text style={{ fontSize: 7, color: '#999', marginRight: 4 }}>•</Text>
+                    <Text style={s.bullet}>{b}</Text>
+                  </View>
                 ))}
               </View>
             </View>
           )
         })}
 
-        {/* Footer — single contact line */}
         <View style={s.footer}>
           <View>
             <Text style={s.footerLeft}>
