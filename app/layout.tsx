@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/components/checklist/Toast";
+import { Nav } from "@/components/checklist/Nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,10 @@ export default function RootLayout({
               <h1 className="text-white text-lg font-bold tracking-tight">
                 Big Buildings Direct
               </h1>
-              <span className="text-white/60 text-sm">Checklist Prototype</span>
+              <div className="flex items-center gap-4">
+                <Nav />
+                <span className="text-white/60 text-sm">Prototype</span>
+              </div>
             </div>
           </header>
 

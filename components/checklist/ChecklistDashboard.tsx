@@ -1,26 +1,39 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { mockOrders } from '@/lib/checklist/mockData'
+import { useState, useMemo, useEffect } from 'react'
+import { getDefaultOrders } from '@/lib/checklist/mockData'
+import { loadManufacturers } from '@/lib/checklist/manufacturerStore'
 import { generateChecklist } from '@/lib/checklist/engine'
 import { renderChecklistEmail } from '@/lib/checklist/emailTemplate'
-import { ChecklistContent, FoundationType, PermitStatus, DrawingType } from '@/lib/checklist/types'
+import { ChecklistContent, FoundationType, PermitStatus, DrawingType, ManufacturerInfo } from '@/lib/checklist/types'
 import { STEP_COLORS } from '@/lib/checklist/colors'
 import { useToast } from '@/components/checklist/Toast'
+import Image from 'next/image'
 
 const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
 const PERMIT_STATUSES: PermitStatus[] = ['No Permit', 'Pulling a Permit']
 const DRAWING_TYPES: DrawingType[] = ['Generic', 'As-Built']
 
 export function ChecklistDashboard() {
-  const [selectedOrderId, setSelectedOrderId] = useState(mockOrders[0].orderId)
+  const [manufacturers, setManufacturers] = useState<ManufacturerInfo[]>([])
+  const [mockOrders, setMockOrders] = useState(() => getDefaultOrders([]))
+  const [selectedOrderId, setSelectedOrderId] = useState('')
   const [foundationOverride, setFoundationOverride] = useState<FoundationType | null>(null)
   const [permitOverride, setPermitOverride] = useState<PermitStatus | null>(null)
   const [drawingOverride, setDrawingOverride] = useState<DrawingType | null>(null)
   const [showEmailModal, setShowEmailModal] = useState(false)
   const { showToast } = useToast()
 
-  const baseOrder = mockOrders.find((o) => o.orderId === selectedOrderId)!
+  useEffect(() => {
+    const mfgs = loadManufacturers()
+    setManufacturers(mfgs)
+    const orders = getDefaultOrders(mfgs)
+    setMockOrders(orders)
+    setSelectedOrderId(orders[0]?.orderId ?? '')
+  }, [])
+
+  const baseOrder = mockOrders.find((o) => o.orderId === selectedOrderId)
+  if (!baseOrder) return null
 
   const effectiveOrder = useMemo(() => {
     const foundation = foundationOverride ?? baseOrder.foundationType
@@ -175,6 +188,32 @@ export function ChecklistDashboard() {
           </p>
         </div>
         <div className="p-5">
+          {/* Manufacturer Info */}
+          <div
+            className="flex items-center gap-4 rounded-lg p-4 mb-5"
+            style={{ background: 'var(--background)' }}
+          >
+            {checklist.manufacturer.logoUrl && (
+              <div className="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-white flex items-center justify-center border" style={{ borderColor: 'var(--table-border)' }}>
+                <Image
+                  src={checklist.manufacturer.logoUrl}
+                  alt={checklist.manufacturer.name}
+                  width={64}
+                  height={64}
+                  className="object-contain w-full h-full p-1"
+                  unoptimized
+                />
+              </div>
+            )}
+            <div className="text-sm" style={{ color: 'var(--text-secondary)' }}>
+              <p className="font-semibold text-base mb-0.5" style={{ color: 'var(--text-primary)' }}>
+                {checklist.manufacturer.name}
+              </p>
+              <p>{checklist.manufacturer.contactName} &bull; {checklist.manufacturer.phone}</p>
+              <p>{checklist.manufacturer.email}</p>
+            </div>
+          </div>
+
           <div className="mb-6">
             <p className="text-base mb-1" style={{ color: 'var(--text-primary)' }}>
               Hi <strong>{checklist.customerName}</strong>,

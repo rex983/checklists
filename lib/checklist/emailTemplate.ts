@@ -54,6 +54,10 @@ export function renderChecklistEmail(checklist: ChecklistContent): string {
     ? ` &bull; ${escapeHtml(checklist.drawingType)} Drawings`
     : ''
 
+  const mfgLogoHtml = checklist.manufacturer.logoUrl
+    ? `<img src="${escapeHtml(checklist.manufacturer.logoUrl)}" alt="${escapeHtml(checklist.manufacturer.name)}" style="width:48px;height:48px;object-fit:contain;border-radius:6px;" />`
+    : ''
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -85,6 +89,28 @@ export function renderChecklistEmail(checklist: ChecklistContent): string {
               <p style="margin:0 0 24px;color:#555;font-size:15px;line-height:1.6;">
                 Here's your personalized checklist to get everything ready for delivery and installation.
               </p>
+            </td>
+          </tr>
+
+          <!-- Manufacturer Info -->
+          <tr>
+            <td style="padding:0 40px 16px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
+                <tr>
+                  <td style="padding:14px 20px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0">
+                      <tr>
+                        ${mfgLogoHtml ? `<td style="padding-right:14px;vertical-align:middle;">${mfgLogoHtml}</td>` : ''}
+                        <td style="vertical-align:middle;">
+                          <p style="margin:0 0 2px;font-size:15px;font-weight:600;color:#1a3a5c;">${escapeHtml(checklist.manufacturer.name)}</p>
+                          <p style="margin:0;font-size:13px;color:#555;">${escapeHtml(checklist.manufacturer.contactName)} &bull; ${escapeHtml(checklist.manufacturer.phone)}</p>
+                          <p style="margin:0;font-size:13px;color:#555;">${escapeHtml(checklist.manufacturer.email)}</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 

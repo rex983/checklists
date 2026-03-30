@@ -3,11 +3,12 @@ export type PermitStatus = 'No Permit' | 'Pulling a Permit'
 export type DrawingType = 'As-Built' | 'Generic'
 
 export interface ManufacturerInfo {
+  id: string
   name: string
   phone: string
   email: string
   contactName: string
-  logoUrl?: string
+  logoUrl: string
 }
 
 export interface ChecklistInput {
