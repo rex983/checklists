@@ -12,7 +12,7 @@ const permitSteps: Record<string, (vars: TemplateVars) => ChecklistStep> = {
     title: 'Permitting — Not Required',
     icon: '✓',
     paragraphs: [
-      `Great news, ${vars.customerFirstName}! Based on your location in ${vars.state}, no building permit is required for your structure.`,
+      `Great news, ${vars.customerFirstName}! Based on your project needs, no building permit is required for your structure.`,
       'You can move directly to land preparation while your building is being fabricated.',
       `If your local jurisdiction contacts you or you have questions, reach out to ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} or ${SUCCESS_TEAM_EMAIL}.`,
       SUCCESS_TEAM_CONTACT,
