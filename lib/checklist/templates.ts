@@ -3,6 +3,7 @@ import { FoundationType, PermitStatus, DrawingType, ChecklistStep } from './type
 const SUCCESS_TEAM_PHONE = '(813) 692-7320'
 const SUCCESS_TEAM_EMAIL = 'SuccessTeam@bigbuildingsdirect.com'
 const SUCCESS_TEAM_NAME = 'our Success Team'
+const SUCCESS_TEAM_CONTACT = `Success Team: ${SUCCESS_TEAM_PHONE} | ${SUCCESS_TEAM_EMAIL}`
 
 // Step 1: Permitting — varies by permitStatus + drawingType
 const permitSteps: Record<string, (vars: TemplateVars) => ChecklistStep> = {
@@ -14,6 +15,7 @@ const permitSteps: Record<string, (vars: TemplateVars) => ChecklistStep> = {
       `Great news, ${vars.customerFirstName}! Based on your location in ${vars.state}, no building permit is required for your structure.`,
       'You can move directly to land preparation while your building is being fabricated.',
       `If your local jurisdiction contacts you or you have questions, reach out to ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} or ${SUCCESS_TEAM_EMAIL}.`,
+      SUCCESS_TEAM_CONTACT,
     ],
   }),
   'Pulling a Permit|Generic': (vars) => ({
@@ -25,6 +27,7 @@ const permitSteps: Record<string, (vars: TemplateVars) => ChecklistStep> = {
       'Generic drawings are pre-engineered for your building size and local wind/snow loads. They are accepted by most jurisdictions.',
       `Your drawings will be sent to ${vars.customerEmail} within 5-7 business days of fabrication start. Contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} for status updates.`,
       'Submit your permit application as soon as you receive the drawings — processing times vary by county.',
+      SUCCESS_TEAM_CONTACT,
     ],
   }),
   'Pulling a Permit|As-Built': (vars) => ({
@@ -36,6 +39,7 @@ const permitSteps: Record<string, (vars: TemplateVars) => ChecklistStep> = {
       'As-built drawings are custom-engineered for your exact site conditions, including foundation details, setbacks, and local code requirements.',
       `These drawings typically take 10-14 business days. They will be sent to ${vars.customerEmail}. Contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} for status.`,
       'Important: Do NOT submit your permit application until you receive the finalized as-built drawings, as they may differ from standard templates.',
+      SUCCESS_TEAM_CONTACT,
     ],
   }),
 }
@@ -50,7 +54,8 @@ const landPrepSteps: Record<FoundationType, (vars: TemplateVars) => ChecklistSte
       `${vars.customerFirstName}, your building requires a concrete slab or pad foundation. This must be completed BEFORE your delivery date.`,
       'Requirements: The concrete pad must be level (within 1/4" over 10 feet), properly cured (minimum 7 days, ideally 28), and sized to your building dimensions plus 2" overhang on each side.',
       'Hire a licensed concrete contractor in your area. Share your building dimensions and any engineering drawings with them.',
-      `Your manufacturer (${vars.mfgName}) can provide anchor bolt layout specifications. Contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} and we'll coordinate with them.`,
+      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
+      SUCCESS_TEAM_CONTACT,
     ],
   }),
   'Level Ground': (vars) => ({
@@ -62,6 +67,8 @@ const landPrepSteps: Record<FoundationType, (vars: TemplateVars) => ChecklistSte
       'Requirements: The installation area must be cleared of debris, vegetation, and large rocks. The ground should be level within 3" across the building footprint.',
       'If your site has a slope, you may need to grade the area. A local excavation contractor can typically complete this in 1-2 days.',
       'The installation crew will bring earth anchors. Ensure the crew has clear access to the site with at least 14 feet of clearance for delivery trucks.',
+      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
+      SUCCESS_TEAM_CONTACT,
     ],
   }),
   'Stem Wall': (vars) => ({
@@ -72,7 +79,8 @@ const landPrepSteps: Record<FoundationType, (vars: TemplateVars) => ChecklistSte
       `${vars.customerFirstName}, your building requires a stem wall (raised perimeter) foundation. This is a more involved foundation and must be completed well before delivery.`,
       'A stem wall foundation involves pouring a continuous concrete perimeter wall, typically 6-12" above grade, with embedded anchor bolts.',
       'You will need a licensed concrete contractor experienced with metal building foundations. Share all engineering drawings and anchor bolt layouts with them.',
-      `Contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} for the detailed stem wall specifications and anchor bolt template for your building.`,
+      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
+      SUCCESS_TEAM_CONTACT,
     ],
   }),
   'Mixed': (vars) => ({
@@ -83,7 +91,8 @@ const landPrepSteps: Record<FoundationType, (vars: TemplateVars) => ChecklistSte
       `${vars.customerFirstName}, your building uses a mixed foundation approach (combination of concrete and ground-mounted sections).`,
       'This typically means a concrete slab for part of the structure and earth anchors for the remainder. Review your engineering drawings carefully for the specific layout.',
       'Coordinate with a concrete contractor for the slab portion. Ensure all concrete work is completed and cured before your scheduled delivery.',
-      `For the exact foundation layout and specifications, contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE}.`,
+      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
+      SUCCESS_TEAM_CONTACT,
     ],
   }),
   'Other': (vars) => ({
@@ -93,8 +102,9 @@ const landPrepSteps: Record<FoundationType, (vars: TemplateVars) => ChecklistSte
     paragraphs: [
       `${vars.customerFirstName}, your building has a custom foundation requirement. Please review your order details and engineering drawings carefully.`,
       'Ensure your site is cleared, level, and accessible for delivery trucks (minimum 14 feet clearance).',
-      `Contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} to confirm the exact foundation requirements and specifications for your building.`,
       'We recommend completing all foundation work at least 2 weeks before your scheduled delivery to allow for curing and inspections.',
+      `${vars.mfgName} will be the installer for this building project. Once your land is ready for installation, email ${SUCCESS_TEAM_EMAIL}.`,
+      SUCCESS_TEAM_CONTACT,
     ],
   }),
 }
@@ -116,6 +126,7 @@ function getSchedulingStep(vars: TemplateVars): ChecklistStep {
       vars.foundationType === 'Concrete' || vars.foundationType === 'Stem Wall'
         ? 'Verify that your foundation is complete, cured, and that anchor bolts are in the correct positions before the crew arrives.'
         : 'Verify that your site is level, cleared, and that there are no underground utilities in the anchor locations.',
+      SUCCESS_TEAM_CONTACT,
     ],
   }
 }
@@ -131,6 +142,7 @@ function getInstallationStep(vars: TemplateVars): ChecklistStep {
       'Please be available on-site (or have a representative present) for the first hour to walk the crew through site access, confirm placement, and address any questions.',
       'The crew will handle all assembly. You do NOT need to provide tools, equipment, or additional labor unless otherwise specified in your order.',
       `After installation, do a walkthrough with the crew. If you notice any issues, contact ${SUCCESS_TEAM_NAME} at ${SUCCESS_TEAM_PHONE} or email ${SUCCESS_TEAM_EMAIL} within 48 hours.`,
+      SUCCESS_TEAM_CONTACT,
     ],
   }
 }
