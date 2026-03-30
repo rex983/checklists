@@ -5,7 +5,7 @@ import { ManufacturerInfo } from '@/lib/checklist/types'
 import { loadManufacturers, saveManufacturers } from '@/lib/checklist/manufacturerStore'
 import { defaultManufacturers } from '@/lib/checklist/mockData'
 import { useToast } from '@/components/checklist/Toast'
-import Image from 'next/image'
+/* eslint-disable @next/next/no-img-element */
 
 export function ManufacturerManager() {
   const [manufacturers, setManufacturers] = useState<ManufacturerInfo[]>([])
@@ -138,13 +138,10 @@ export function ManufacturerManager() {
                   >
                     {(isEditing ? draft.logoUrl : mfg.logoUrl) ? (
                       <>
-                        <Image
+                        <img
                           src={(isEditing ? draft.logoUrl : mfg.logoUrl) || ''}
                           alt={mfg.name}
-                          width={96}
-                          height={96}
                           className="object-contain w-full h-full p-1"
-                          unoptimized
                         />
                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                           <span className="text-white text-xs font-medium">Change</span>

@@ -8,7 +8,7 @@ import { renderChecklistEmail } from '@/lib/checklist/emailTemplate'
 import { ChecklistContent, ChecklistStep, FoundationType, PermitStatus, DrawingType, ManufacturerInfo } from '@/lib/checklist/types'
 import { STEP_COLORS } from '@/lib/checklist/colors'
 import { useToast } from '@/components/checklist/Toast'
-import Image from 'next/image'
+/* eslint-disable @next/next/no-img-element */
 import { generateChecklistPDF } from '@/components/checklist/ChecklistPDF'
 
 const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
@@ -200,7 +200,7 @@ export function ChecklistDashboard() {
           <div className="flex items-center gap-5 mb-5">
             {checklist.manufacturer.logoUrl && (
               <div className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-white flex items-center justify-center border-2" style={{ borderColor: 'var(--table-border)' }}>
-                <Image src={checklist.manufacturer.logoUrl} alt={checklist.manufacturer.name} width={80} height={80} className="object-contain w-full h-full p-2" unoptimized />
+                <img src={checklist.manufacturer.logoUrl} alt={checklist.manufacturer.name} className="object-contain w-full h-full p-2" />
               </div>
             )}
             <div>
