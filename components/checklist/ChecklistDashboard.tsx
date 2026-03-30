@@ -32,10 +32,10 @@ export function ChecklistDashboard() {
     setSelectedOrderId(orders[0]?.orderId ?? '')
   }, [])
 
-  const baseOrder = mockOrders.find((o) => o.orderId === selectedOrderId)
-  if (!baseOrder) return null
+  const baseOrder = mockOrders.find((o) => o.orderId === selectedOrderId) ?? null
 
   const effectiveOrder = useMemo(() => {
+    if (!baseOrder) return null
     const foundation = foundationOverride ?? baseOrder.foundationType
     const permit = permitOverride ?? baseOrder.permitStatus
     const drawing = permit === 'No Permit'
@@ -45,13 +45,20 @@ export function ChecklistDashboard() {
     return { ...baseOrder, foundationType: foundation, permitStatus: permit, drawingType: drawing }
   }, [baseOrder, foundationOverride, permitOverride, drawingOverride])
 
-  const checklist: ChecklistContent = useMemo(() => generateChecklist(effectiveOrder), [effectiveOrder])
+  const checklist: ChecklistContent | null = useMemo(
+    () => effectiveOrder ? generateChecklist(effectiveOrder) : null,
+    [effectiveOrder]
+  )
 
   // Defer email HTML generation until modal is actually open
   const emailHtml = useMemo(
-    () => showEmailModal ? renderChecklistEmail(checklist) : '',
+    () => (showEmailModal && checklist) ? renderChecklistEmail(checklist) : '',
     [checklist, showEmailModal]
   )
+
+  const hasOverrides = foundationOverride !== null || permitOverride !== null || drawingOverride !== null
+
+  if (!baseOrder || !checklist) return null
 
   function handleOrderChange(orderId: string) {
     setSelectedOrderId(orderId)
@@ -59,8 +66,6 @@ export function ChecklistDashboard() {
     setPermitOverride(null)
     setDrawingOverride(null)
   }
-
-  const hasOverrides = foundationOverride !== null || permitOverride !== null || drawingOverride !== null
 
   return (
     <div>
@@ -140,7 +145,7 @@ export function ChecklistDashboard() {
             isOverridden={permitOverride !== null}
             onChange={(v) => setPermitOverride(v as PermitStatus)}
           />
-          {effectiveOrder.permitStatus === 'Pulling a Permit' && (
+          {checklist.permitStatus === 'Pulling a Permit' && (
             <OverrideSelect
               label="Drawing Type"
               value={drawingOverride ?? baseOrder.drawingType ?? 'Generic'}
