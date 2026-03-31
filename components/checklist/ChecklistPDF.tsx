@@ -2,10 +2,7 @@
 
 import { Document, Page, Text, View, Image, StyleSheet, pdf } from '@react-pdf/renderer'
 import { ChecklistContent } from '@/lib/checklist/types'
-import { STEP_COLORS } from '@/lib/checklist/colors'
-
-const SUCCESS_TEAM_PHONE = '(813) 692-7320'
-const SUCCESS_TEAM_EMAIL = 'SuccessTeam@bigbuildingsdirect.com'
+import { STEP_COLORS, SUCCESS_TEAM_PHONE, SUCCESS_TEAM_EMAIL } from '@/lib/checklist/colors'
 
 const s = StyleSheet.create({
   page: {

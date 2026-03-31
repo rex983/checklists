@@ -324,6 +324,18 @@ function BulletRow({ bullet, index, isFirst, isLast, onUpdate, onRemove, onMove 
 function VariableInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [showVars, setShowVars] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!showVars) return
+    function handleClick(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setShowVars(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [showVars])
 
   function insertVariable(token: string) {
     const el = inputRef.current
@@ -359,6 +371,7 @@ function VariableInput({ value, onChange }: { value: string; onChange: (v: strin
       </button>
       {showVars && (
         <div
+          ref={dropdownRef}
           className="absolute right-0 top-full mt-1 rounded-lg border p-2 z-10 min-w-[250px]"
           style={{ background: 'var(--bg-card)', borderColor: 'var(--input-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
         >

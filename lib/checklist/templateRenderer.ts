@@ -1,8 +1,6 @@
 import { ChecklistStep, FoundationType, PermitStatus, DrawingType } from './types'
-import { EditableTemplateBlock, BulletItem } from './templateTypes'
-
-const SUCCESS_TEAM_PHONE = '(813) 692-7320'
-const SUCCESS_TEAM_EMAIL = 'SuccessTeam@bigbuildingsdirect.com'
+import { EditableTemplateBlock } from './templateTypes'
+import { SUCCESS_TEAM_PHONE, SUCCESS_TEAM_EMAIL } from './colors'
 
 export interface RenderVars {
   manufacturer: string
@@ -28,28 +26,19 @@ function replaceTokens(text: string, vars: RenderVars): string {
     .replace(/\{successTeamEmail\}/g, vars.successTeamEmail)
 }
 
-function shouldShowBullet(bullet: BulletItem, vars: RenderVars): boolean {
-  if (!bullet.condition) return true
-  const fieldValue = vars[bullet.condition.field as keyof RenderVars] as string
-  return bullet.condition.values.includes(fieldValue)
-}
-
-function getBulletText(bullet: BulletItem, vars: RenderVars): string {
-  if (bullet.condition && !bullet.condition.values.includes(vars[bullet.condition.field as keyof RenderVars] as string)) {
-    return bullet.condition.altText ? replaceTokens(bullet.condition.altText, vars) : ''
-  }
-  return replaceTokens(bullet.text, vars)
-}
-
 export function renderTemplateBlock(block: EditableTemplateBlock, vars: RenderVars): ChecklistStep {
   const bullets: string[] = []
   for (const b of block.bullets) {
     if (!b.condition) {
       bullets.push(replaceTokens(b.text, vars))
     } else {
-      const text = getBulletText(b, vars)
-      if (text) bullets.push(text)
-      else if (b.condition.altText) bullets.push(replaceTokens(b.condition.altText, vars))
+      const fieldValue = vars[b.condition.field as keyof RenderVars] as string
+      const matches = b.condition.values.includes(fieldValue)
+      if (matches) {
+        bullets.push(replaceTokens(b.text, vars))
+      } else if (b.condition.altText) {
+        bullets.push(replaceTokens(b.condition.altText, vars))
+      }
     }
   }
 
