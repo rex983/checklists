@@ -1,24 +1,23 @@
 import { ChecklistInput, ChecklistContent } from './types'
-import { getTemplateKey, buildSteps } from './templates'
+import { getTemplateKey } from './templates'
+import { loadTemplateBlocks } from './templateStore'
+import { buildStepsFromStore, inputToRenderVars } from './templateRenderer'
 
 export function generateChecklist(input: ChecklistInput): ChecklistContent {
   const firstName = input.customerName.split(' ')[0]
+  const blocks = loadTemplateBlocks()
 
-  const vars = {
+  const vars = inputToRenderVars({
     customerFirstName: firstName,
     customerEmail: input.customerEmail,
-    state: input.state,
-    foundationType: input.foundationType,
-    permitStatus: input.permitStatus,
-    drawingType: input.drawingType,
-    mfgName: input.manufacturer.name,
-    mfgPhone: input.manufacturer.phone,
-    mfgEmail: input.manufacturer.email,
-    mfgContactName: input.manufacturer.contactName,
+    manufacturer: input.manufacturer.name,
     estimatedWeeks: input.estimatedDeliveryWeeks ?? 8,
-  }
+    permitStatus: input.permitStatus,
+    foundationType: input.foundationType,
+    drawingType: input.drawingType,
+  })
 
-  const steps = buildSteps(vars)
+  const steps = buildStepsFromStore(vars, blocks)
   const templateKey = getTemplateKey(input.foundationType, input.permitStatus, input.drawingType)
 
   return {
