@@ -126,7 +126,7 @@ export function ManufacturerManager() {
             onClick={() => setSortBy(key)}
             className="px-3 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors"
             style={{
-              background: sortBy === key ? '#2563eb' : 'var(--bg-card)',
+              background: sortBy === key ? '#2563eb' : 'var(--card-bg)',
               color: sortBy === key ? '#fff' : 'var(--text-secondary)',
               boxShadow: sortBy !== key ? 'var(--card-shadow)' : 'none',
             }}
@@ -145,7 +145,7 @@ export function ManufacturerManager() {
               key={mfg.id}
               className="rounded-xl p-5"
               style={{
-                background: 'var(--bg-card)',
+                background: 'var(--card-bg)',
                 boxShadow: 'var(--card-shadow)',
                 borderLeft: isEditing ? '4px solid #2563eb' : '4px solid transparent',
               }}

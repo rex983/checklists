@@ -75,7 +75,7 @@ export function TemplateEditor() {
             onClick={() => handleTabChange(cat.key)}
             className="px-4 py-2.5 rounded-lg text-sm font-medium whitespace-nowrap cursor-pointer transition-colors"
             style={{
-              background: activeTab === cat.key ? 'linear-gradient(135deg,#1a3a5c 0%,#2563eb 100%)' : 'var(--bg-card)',
+              background: activeTab === cat.key ? 'linear-gradient(135deg,#1a3a5c 0%,#2563eb 100%)' : 'var(--card-bg)',
               color: activeTab === cat.key ? '#fff' : 'var(--text-secondary)',
               boxShadow: activeTab !== cat.key ? 'var(--card-shadow)' : 'none',
             }}
@@ -95,7 +95,7 @@ export function TemplateEditor() {
               onClick={() => setActiveBlockId(block.id)}
               className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-colors"
               style={{
-                background: activeBlockId === block.id ? '#2563eb' : 'var(--bg-card)',
+                background: activeBlockId === block.id ? '#2563eb' : 'var(--card-bg)',
                 color: activeBlockId === block.id ? '#fff' : 'var(--text-secondary)',
                 boxShadow: activeBlockId !== block.id ? 'var(--card-shadow)' : 'none',
               }}
@@ -151,7 +151,7 @@ function BlockEditor({ block, onChange, onReset }: {
   }
 
   return (
-    <div className="rounded-xl p-6" style={{ background: 'var(--bg-card)', boxShadow: 'var(--card-shadow)' }}>
+    <div className="rounded-xl p-6" style={{ background: 'var(--card-bg)', boxShadow: 'var(--card-shadow)' }}>
       {/* Header fields */}
       <div className="grid grid-cols-[1fr_80px_160px] gap-4 mb-5">
         <div>
@@ -373,7 +373,7 @@ function VariableInput({ value, onChange }: { value: string; onChange: (v: strin
         <div
           ref={dropdownRef}
           className="absolute right-0 top-full mt-1 rounded-lg border p-2 z-10 min-w-[250px]"
-          style={{ background: 'var(--bg-card)', borderColor: 'var(--input-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
+          style={{ background: 'var(--card-bg)', borderColor: 'var(--input-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
         >
           {TEMPLATE_VARIABLES.map(v => (
             <button

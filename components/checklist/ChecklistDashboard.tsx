@@ -118,7 +118,7 @@ export function ChecklistDashboard() {
       {/* Controls */}
       <div
         className="rounded-xl p-5 mb-6"
-        style={{ background: 'var(--bg-card)', boxShadow: 'var(--card-shadow)' }}
+        style={{ background: 'var(--card-bg)', boxShadow: 'var(--card-shadow)' }}
       >
         <div className="flex flex-wrap gap-4 items-end mb-4">
           <div className="flex-1 min-w-[260px]">
@@ -193,7 +193,7 @@ export function ChecklistDashboard() {
       </div>
 
       {/* Live Preview */}
-      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--bg-card)', boxShadow: 'var(--card-shadow)' }}>
+      <div className="rounded-xl overflow-hidden" style={{ background: 'var(--card-bg)', boxShadow: 'var(--card-shadow)' }}>
 
         {/* Manufacturer Info + Greeting */}
         <div className="p-6 pb-0">
@@ -302,7 +302,7 @@ export function ChecklistDashboard() {
       {/* Email Preview Modal */}
       {showEmailModal && (
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }} onClick={() => setShowEmailModal(false)}>
-          <div className="rounded-xl overflow-hidden w-full max-w-[680px] max-h-[90vh] flex flex-col" style={{ background: 'var(--bg-card)' }} onClick={(e) => e.stopPropagation()}>
+          <div className="rounded-xl overflow-hidden w-full max-w-[680px] max-h-[90vh] flex flex-col" style={{ background: 'var(--card-bg)' }} onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-3 border-b" style={{ borderColor: 'var(--table-border)' }}>
               <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Email Preview — {checklist.customerEmail}</p>
               <button onClick={() => setShowEmailModal(false)} className="text-lg leading-none px-2 cursor-pointer" style={{ color: 'var(--text-secondary)' }}>×</button>
