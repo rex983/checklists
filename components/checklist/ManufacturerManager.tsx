@@ -7,10 +7,18 @@ import { defaultManufacturers } from '@/lib/checklist/mockData'
 import { useToast } from '@/components/checklist/Toast'
 /* eslint-disable @next/next/no-img-element */
 
+type SortKey = 'name' | 'contactName' | 'custom'
+
+function getSorted(list: ManufacturerInfo[], key: SortKey): ManufacturerInfo[] {
+  if (key === 'custom') return list
+  return [...list].sort((a, b) => a[key].localeCompare(b[key]))
+}
+
 export function ManufacturerManager() {
   const [manufacturers, setManufacturers] = useState<ManufacturerInfo[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draft, setDraft] = useState<Partial<ManufacturerInfo>>({})
+  const [sortBy, setSortBy] = useState<SortKey>('custom')
   const { showToast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -109,8 +117,27 @@ export function ManufacturerManager() {
         </div>
       </div>
 
+      {/* Sort Controls */}
+      <div className="flex items-center gap-2 mb-4">
+        <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>Sort:</span>
+        {([['name', 'A–Z Name'], ['contactName', 'Contact'], ['custom', 'Custom']] as const).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setSortBy(key)}
+            className="px-3 py-1 rounded-lg text-xs font-medium cursor-pointer transition-colors"
+            style={{
+              background: sortBy === key ? '#2563eb' : 'var(--bg-card)',
+              color: sortBy === key ? '#fff' : 'var(--text-secondary)',
+              boxShadow: sortBy !== key ? 'var(--card-shadow)' : 'none',
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
       <div className="grid gap-4">
-        {manufacturers.map((mfg) => {
+        {getSorted(manufacturers, sortBy).map((mfg) => {
           const isEditing = editingId === mfg.id
 
           return (
