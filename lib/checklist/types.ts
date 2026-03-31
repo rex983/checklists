@@ -34,6 +34,26 @@ export interface ChecklistStep {
   timelineLabel: string   // e.g. "Weeks 1-2"
 }
 
+export type ChecklistStatus = 'Not Sent' | 'Sent' | 'Viewed'
+
+export interface Customer {
+  id: string
+  orderNumber: string
+  name: string
+  email: string
+  phone: string
+  deliveryAddress: string
+  state: string
+  foundationType: FoundationType
+  permitStatus: PermitStatus
+  drawingType?: DrawingType
+  manufacturerId: string
+  estimatedDeliveryWeeks: number
+  checklistStatus: ChecklistStatus
+  notes: string
+  createdAt: string
+}
+
 export interface ChecklistContent {
   customerName: string
   customerEmail: string

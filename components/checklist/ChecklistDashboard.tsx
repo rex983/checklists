@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { getDefaultOrders } from '@/lib/checklist/mockData'
 import { loadManufacturers } from '@/lib/checklist/manufacturerStore'
+import { loadCustomers } from '@/lib/checklist/customerStore'
 import { generateChecklist } from '@/lib/checklist/engine'
 import { renderChecklistEmail } from '@/lib/checklist/emailTemplate'
-import { ChecklistContent, ChecklistStep, FoundationType, PermitStatus, DrawingType, ManufacturerInfo } from '@/lib/checklist/types'
+import { ChecklistContent, ChecklistStep, ChecklistInput, FoundationType, PermitStatus, DrawingType, ManufacturerInfo, Customer } from '@/lib/checklist/types'
 import { STEP_COLORS } from '@/lib/checklist/colors'
 import { useToast } from '@/components/checklist/Toast'
 /* eslint-disable @next/next/no-img-element */
@@ -15,16 +17,28 @@ const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wa
 const PERMIT_STATUSES: PermitStatus[] = ['No Permit', 'Pulling a Permit']
 const DRAWING_TYPES: DrawingType[] = ['Generic', 'As-Built']
 
-const STEP_ICONS: Record<number, string> = {
-  1: '/icons/permit.svg',
-  2: '/icons/landprep.svg',
-  3: '/icons/delivery.svg',
-  4: '/icons/install.svg',
+function customerToInput(c: Customer, mfg: ManufacturerInfo): ChecklistInput {
+  return {
+    orderId: c.id,
+    orderNumber: c.orderNumber,
+    customerName: c.name,
+    customerEmail: c.email,
+    deliveryAddress: c.deliveryAddress,
+    state: c.state,
+    foundationType: c.foundationType,
+    permitStatus: c.permitStatus,
+    drawingType: c.drawingType,
+    manufacturer: mfg,
+    estimatedDeliveryWeeks: c.estimatedDeliveryWeeks,
+  }
 }
 
 export function ChecklistDashboard() {
+  const searchParams = useSearchParams()
+  const customerIdParam = searchParams.get('customer')
+
   const [manufacturers, setManufacturers] = useState<ManufacturerInfo[]>([])
-  const [mockOrders, setMockOrders] = useState(() => getDefaultOrders([]))
+  const [orders, setOrders] = useState<ChecklistInput[]>([])
   const [selectedOrderId, setSelectedOrderId] = useState('')
   const [foundationOverride, setFoundationOverride] = useState<FoundationType | null>(null)
   const [permitOverride, setPermitOverride] = useState<PermitStatus | null>(null)
@@ -37,12 +51,30 @@ export function ChecklistDashboard() {
   useEffect(() => {
     const mfgs = loadManufacturers()
     setManufacturers(mfgs)
-    const orders = getDefaultOrders(mfgs)
-    setMockOrders(orders)
-    setSelectedOrderId(orders[0]?.orderId ?? '')
-  }, [])
+    const mfgMap = new Map(mfgs.map(m => [m.id, m]))
 
-  const baseOrder = mockOrders.find((o) => o.orderId === selectedOrderId) ?? null
+    // Build orders from customers + mock data
+    const customers = loadCustomers()
+    const customerOrders = customers
+      .map(c => {
+        const mfg = mfgMap.get(c.manufacturerId)
+        return mfg ? customerToInput(c, mfg) : null
+      })
+      .filter((o): o is ChecklistInput => o !== null)
+
+    const mockOrders = getDefaultOrders(mfgs)
+    const allOrders = [...customerOrders, ...mockOrders]
+    setOrders(allOrders)
+
+    // If customer param, select that customer; otherwise first order
+    if (customerIdParam && customerOrders.find(o => o.orderId === customerIdParam)) {
+      setSelectedOrderId(customerIdParam)
+    } else {
+      setSelectedOrderId(allOrders[0]?.orderId ?? '')
+    }
+  }, [customerIdParam])
+
+  const baseOrder = orders.find((o) => o.orderId === selectedOrderId) ?? null
 
   const effectiveOrder = useMemo(() => {
     if (!baseOrder) return null
@@ -131,12 +163,24 @@ export function ChecklistDashboard() {
               className="w-full rounded-lg border px-3 py-2 text-sm"
               style={{ background: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--text-primary)' }}
             >
-              {mockOrders.map((order) => (
-                <option key={order.orderId} value={order.orderId}>
-                  {order.orderNumber} — {order.customerName} ({order.foundationType}, {order.permitStatus}
-                  {order.drawingType ? `, ${order.drawingType}` : ''})
-                </option>
-              ))}
+              {orders.some(o => o.orderId.startsWith('cust-')) && (
+                <optgroup label="Customers">
+                  {orders.filter(o => o.orderId.startsWith('cust-')).map(order => (
+                    <option key={order.orderId} value={order.orderId}>
+                      {order.orderNumber || 'No order #'} — {order.customerName} ({order.foundationType}, {order.permitStatus}
+                      {order.drawingType ? `, ${order.drawingType}` : ''})
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              <optgroup label="Sample Data">
+                {orders.filter(o => o.orderId.startsWith('mock-')).map(order => (
+                  <option key={order.orderId} value={order.orderId}>
+                    {order.orderNumber} — {order.customerName} ({order.foundationType}, {order.permitStatus}
+                    {order.drawingType ? `, ${order.drawingType}` : ''})
+                  </option>
+                ))}
+              </optgroup>
             </select>
           </div>
           <div className="flex gap-2">
