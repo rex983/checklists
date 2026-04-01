@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { Customer, ManufacturerInfo, FoundationType, PermitStatus, DrawingType, ChecklistStatus } from '@/lib/checklist/types'
 import { loadCustomers, saveCustomers } from '@/lib/checklist/customerStore'
 import { loadManufacturers } from '@/lib/checklist/manufacturerStore'
+import { sendChecklistEmail } from '@/lib/checklist/checklistService'
 import { useToast } from '@/components/checklist/Toast'
 
 const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
@@ -109,8 +110,42 @@ export function CustomerManager() {
     showToast('Customer removed', 'info')
   }
 
+  const mfgMap = useMemo(() => new Map(manufacturers.map(m => [m.id, m])), [manufacturers])
+
   function updateStatus(id: string, status: ChecklistStatus) {
     save(customers.map(c => c.id === id ? { ...c, checklistStatus: status } : c))
+  }
+
+  async function sendChecklist(c: Customer) {
+    const mfg = mfgMap.get(c.manufacturerId)
+    if (!mfg) {
+      showToast('No manufacturer assigned', 'warning')
+      return
+    }
+    if (!c.email) {
+      showToast('Customer has no email address', 'warning')
+      return
+    }
+    showToast(`Sending checklist to ${c.email}...`, 'info')
+    const result = await sendChecklistEmail({
+      orderId: c.id,
+      orderNumber: c.orderNumber,
+      customerName: c.name,
+      customerEmail: c.email,
+      deliveryAddress: c.deliveryAddress,
+      state: c.state,
+      foundationType: c.foundationType,
+      permitStatus: c.permitStatus,
+      drawingType: c.drawingType,
+      manufacturer: mfg,
+      estimatedDeliveryWeeks: c.estimatedDeliveryWeeks,
+    })
+    if (result.success) {
+      updateStatus(c.id, 'Sent')
+      showToast(result.sent ? `Checklist emailed to ${c.email}` : `Checklist generated (email not configured)`, result.sent ? 'success' : 'info')
+    } else {
+      showToast(`Failed: ${result.error}`, 'error')
+    }
   }
 
   // Filter + sort
@@ -132,8 +167,6 @@ export function CustomerManager() {
       return (a[sortBy] ?? '').localeCompare(b[sortBy] ?? '')
     })
   }, [customers, filterStatus, search, sortBy])
-
-  const mfgMap = useMemo(() => new Map(manufacturers.map(m => [m.id, m])), [manufacturers])
 
   return (
     <div>
@@ -347,12 +380,19 @@ export function CustomerManager() {
 
                 {/* Actions */}
                 <div className="flex gap-1 flex-shrink-0">
+                  <button
+                    onClick={() => sendChecklist(c)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
+                    style={{ color: '#fff', background: '#059669' }}
+                  >
+                    Send
+                  </button>
                   <a
                     href={`/?customer=${c.id}`}
                     className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
                     style={{ color: '#2563eb', background: '#2563eb11' }}
                   >
-                    View Checklist
+                    View
                   </a>
                   <button onClick={() => startEdit(c)} className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer" style={{ color: 'var(--text-secondary)' }}>
                     Edit
