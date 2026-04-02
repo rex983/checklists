@@ -1,5 +1,6 @@
 import { ChecklistContent } from './types'
 import { STEP_COLORS } from './colors'
+import { isSafeUrl } from './validation'
 
 function escapeHtml(text: string): string {
   return text
@@ -62,7 +63,7 @@ export function renderChecklistEmail(checklist: ChecklistContent, pdfUrl?: strin
     ? ` &bull; ${escapeHtml(checklist.drawingType)} Drawings`
     : ''
 
-  const mfgLogoHtml = checklist.manufacturer.logoUrl
+  const mfgLogoHtml = checklist.manufacturer.logoUrl && isSafeUrl(checklist.manufacturer.logoUrl)
     ? `<img src="${escapeHtml(checklist.manufacturer.logoUrl)}" alt="${escapeHtml(checklist.manufacturer.name)}" style="width:60px;height:60px;object-fit:contain;border-radius:8px;" />`
     : ''
 

@@ -15,11 +15,20 @@ export interface RenderVars {
   drawingType?: DrawingType
 }
 
+/** Escape HTML entities in user-provided values before token substitution */
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
 function replaceTokens(text: string, vars: RenderVars): string {
   return text
-    .replace(/\{manufacturer\}/g, vars.manufacturer)
-    .replace(/\{customerFirstName\}/g, vars.customerFirstName)
-    .replace(/\{customerEmail\}/g, vars.customerEmail)
+    .replace(/\{manufacturer\}/g, escapeHtml(vars.manufacturer))
+    .replace(/\{customerFirstName\}/g, escapeHtml(vars.customerFirstName))
+    .replace(/\{customerEmail\}/g, escapeHtml(vars.customerEmail))
     .replace(/\{estimatedWeeks\}/g, String(vars.estimatedWeeks))
     .replace(/\{estimatedWeeksStart\}/g, String(vars.estimatedWeeksStart))
     .replace(/\{successTeamPhone\}/g, vars.successTeamPhone)

@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { generateChecklist } from '@/lib/checklist/engine'
+import { renderChecklistEmail } from '@/lib/checklist/emailTemplate'
+import { validateEmail, sanitizeString, isValidFoundationType, isValidPermitStatus } from '@/lib/checklist/validation'
 
 const WEBHOOK_SECRET = process.env.CHECKLIST_WEBHOOK_SECRET
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
+const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'projects@bigbuildingsdirect.com'
+const FROM_NAME = process.env.SENDGRID_FROM_NAME || 'Big Buildings Direct'
 
 /**
  * POST /api/checklist/webhook
@@ -8,34 +14,36 @@ const WEBHOOK_SECRET = process.env.CHECKLIST_WEBHOOK_SECRET
  * Supabase Database Webhook endpoint.
  * Triggered when an order's status changes to "ready_for_manufacturer".
  *
+ * Authentication: REQUIRED via x-webhook-secret header.
+ *
  * Supabase webhook config:
  *   Table: orders
  *   Events: UPDATE
  *   Filter: status = 'ready_for_manufacturer'
  *   URL: https://your-domain.com/api/checklist/webhook
  *   Headers: { "x-webhook-secret": "<CHECKLIST_WEBHOOK_SECRET>" }
- *
- * The webhook payload contains the full order row.
- * This endpoint maps the order data to ChecklistInput and calls /api/checklist/send.
  */
 export async function POST(request: NextRequest) {
-  // Verify webhook secret
-  if (WEBHOOK_SECRET) {
-    const secret = request.headers.get('x-webhook-secret')
-    if (secret !== WEBHOOK_SECRET) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+  // Mandatory webhook authentication
+  if (!WEBHOOK_SECRET) {
+    console.error('CHECKLIST_WEBHOOK_SECRET is not configured')
+    return NextResponse.json({ error: 'Webhook not configured' }, { status: 503 })
+  }
+
+  const secret = request.headers.get('x-webhook-secret')
+  if (!secret || secret !== WEBHOOK_SECRET) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
     const payload = await request.json()
 
     // Supabase webhook sends: { type, table, schema, record, old_record }
-    const record = payload.record
-    const oldRecord = payload.old_record
+    const record = payload?.record
+    const oldRecord = payload?.old_record
 
-    if (!record) {
-      return NextResponse.json({ error: 'No record in payload' }, { status: 400 })
+    if (!record || typeof record !== 'object') {
+      return NextResponse.json({ error: 'Invalid payload: missing record' }, { status: 400 })
     }
 
     // Only trigger if status just changed TO ready_for_manufacturer
@@ -46,47 +54,59 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ skipped: true, reason: 'Status did not change to ready_for_manufacturer' })
     }
 
-    // Map Order Process order row to ChecklistInput
-    // The order row stores customer/building/pricing as JSONB columns
+    // Parse and validate customer JSONB
     const customer = typeof record.customer === 'string'
       ? JSON.parse(record.customer)
       : record.customer
 
+    if (!customer || typeof customer !== 'object') {
+      return NextResponse.json({ error: 'Invalid customer data' }, { status: 400 })
+    }
+
+    if (!customer.firstName || !customer.lastName || !customer.email) {
+      return NextResponse.json({ error: 'Incomplete customer data: need firstName, lastName, email' }, { status: 400 })
+    }
+
+    if (!validateEmail(customer.email)) {
+      return NextResponse.json({ error: 'Invalid customer email' }, { status: 400 })
+    }
+
+    // Parse and validate building JSONB
     const building = typeof record.building === 'string'
       ? JSON.parse(record.building)
       : record.building
 
-    if (!customer?.email) {
-      return NextResponse.json({ error: 'Order has no customer email' }, { status: 400 })
+    if (!building || typeof building !== 'object') {
+      return NextResponse.json({ error: 'Invalid building data' }, { status: 400 })
     }
 
-    // Map permittingStructure values to our PermitStatus type
-    const permitStatus = building?.permittingStructure === 'No Permit'
-      ? 'No Permit'
-      : 'Pulling a Permit'
+    // Map and validate fields
+    const permitStatus = building.permittingStructure === 'No Permit'
+      ? 'No Permit' as const
+      : 'Pulling a Permit' as const
 
-    // Map foundation type (Order Process uses same values)
-    const foundationType = building?.foundationType || 'Other'
+    const rawFoundation = building.foundationType || 'Other'
+    const foundationType = isValidFoundationType(rawFoundation) ? rawFoundation : 'Other' as const
 
-    // Map drawing type
+    const rawDrawing = building.drawingType || 'Generic'
     const drawingType = permitStatus === 'Pulling a Permit'
-      ? (building?.drawingType || 'Generic')
+      ? (rawDrawing === 'As-Built' ? 'As-Built' as const : 'Generic' as const)
       : undefined
 
     const checklistInput = {
-      orderId: record.id,
-      orderNumber: record.order_number,
-      customerName: `${customer.firstName} ${customer.lastName}`.trim(),
-      customerEmail: customer.email,
-      deliveryAddress: customer.deliveryAddress || '',
-      state: customer.state || '',
+      orderId: String(record.id || ''),
+      orderNumber: sanitizeString(String(record.order_number || ''), 50),
+      customerName: sanitizeString(`${customer.firstName} ${customer.lastName}`.trim(), 100),
+      customerEmail: customer.email.trim().toLowerCase(),
+      deliveryAddress: sanitizeString(customer.deliveryAddress || '', 300),
+      state: sanitizeString(customer.state || '', 50),
       foundationType,
       permitStatus,
       drawingType,
       manufacturer: {
-        id: building?.manufacturer?.toLowerCase().replace(/\s+/g, '-') || 'unknown',
-        name: building?.manufacturer || 'Unknown Manufacturer',
-        phone: '', // populated from manufacturer_config in production
+        id: sanitizeString((building.manufacturer || 'unknown').toLowerCase().replace(/\s+/g, '-'), 50),
+        name: sanitizeString(building.manufacturer || 'Unknown Manufacturer', 100),
+        phone: '',
         email: '',
         contactName: '',
         logoUrl: '',
@@ -94,23 +114,54 @@ export async function POST(request: NextRequest) {
       estimatedDeliveryWeeks: 8,
     }
 
-    // Call the send endpoint
-    const baseUrl = request.nextUrl.origin
-    const sendResponse = await fetch(`${baseUrl}/api/checklist/send`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(checklistInput),
-    })
+    // Generate checklist and send email directly (no internal fetch — avoids SSRF)
+    const checklist = generateChecklist(checklistInput)
 
-    const result = await sendResponse.json()
+    if (SENDGRID_API_KEY) {
+      const emailHtml = renderChecklistEmail(checklist)
+
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 15000)
+
+      try {
+        const sgResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${SENDGRID_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            personalizations: [{
+              to: [{ email: checklistInput.customerEmail, name: checklistInput.customerName }],
+            }],
+            from: { email: FROM_EMAIL, name: FROM_NAME },
+            subject: `Your Next Steps Checklist — Order ${checklistInput.orderNumber}`,
+            content: [{ type: 'text/html', value: emailHtml }],
+          }),
+          signal: controller.signal,
+        })
+
+        clearTimeout(timeout)
+
+        if (!sgResponse.ok) {
+          console.error('SendGrid error in webhook')
+          return NextResponse.json({ error: 'Failed to send email' }, { status: 502 })
+        }
+      } catch {
+        clearTimeout(timeout)
+        return NextResponse.json({ error: 'Email service unavailable' }, { status: 502 })
+      }
+    }
 
     return NextResponse.json({
       success: true,
-      orderNumber: record.order_number,
-      ...result,
+      sent: !!SENDGRID_API_KEY,
+      orderNumber: checklistInput.orderNumber,
+      templateKey: checklist.templateKey,
+      customerEmail: checklistInput.customerEmail,
     })
   } catch (error) {
-    console.error('Webhook error:', error)
+    console.error('Webhook error:', error instanceof Error ? error.message : 'unknown')
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
