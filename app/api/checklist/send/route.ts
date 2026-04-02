@@ -19,6 +19,16 @@ const FROM_NAME = process.env.SENDGRID_FROM_NAME || 'Big Buildings Direct'
  * Returns: { success: true, templateKey, customerEmail }
  */
 export async function POST(request: NextRequest) {
+  // CSRF: reject cross-origin requests unless from allowed origins
+  const origin = request.headers.get('origin')
+  const host = request.headers.get('host')
+  if (origin && host && !origin.includes(host)) {
+    const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') ?? []
+    if (!ALLOWED_ORIGINS.includes(origin)) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+  }
+
   try {
     const raw = await request.json()
 
@@ -28,14 +38,26 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Validation failed', errors }, { status: 400 })
     }
 
-    // Sanitize string fields
+    // Construct input explicitly — never spread untrusted data
     const input: ChecklistInput = {
-      ...raw,
+      orderId: sanitizeString(String(raw.orderId || ''), 50),
+      orderNumber: sanitizeString(raw.orderNumber || '', 50),
       customerName: sanitizeString(raw.customerName, 100),
       customerEmail: raw.customerEmail.trim().toLowerCase(),
-      orderNumber: sanitizeString(raw.orderNumber || '', 50),
       deliveryAddress: sanitizeString(raw.deliveryAddress || '', 300),
       state: sanitizeString(raw.state || '', 50),
+      foundationType: raw.foundationType || 'Other',
+      permitStatus: raw.permitStatus || 'No Permit',
+      drawingType: raw.drawingType || undefined,
+      manufacturer: {
+        id: sanitizeString(String(raw.manufacturer?.id || ''), 50),
+        name: sanitizeString(String(raw.manufacturer?.name || ''), 100),
+        phone: sanitizeString(String(raw.manufacturer?.phone || ''), 30),
+        email: sanitizeString(String(raw.manufacturer?.email || ''), 100),
+        contactName: sanitizeString(String(raw.manufacturer?.contactName || ''), 100),
+        logoUrl: String(raw.manufacturer?.logoUrl || ''),
+      },
+      estimatedDeliveryWeeks: Number(raw.estimatedDeliveryWeeks) || 8,
     }
 
     // Generate the checklist

@@ -173,12 +173,25 @@ export function getDefaultTemplateBlocks(): EditableTemplateBlock[] {
   ]
 }
 
+function isValidBlock(b: unknown): b is EditableTemplateBlock {
+  if (!b || typeof b !== 'object') return false
+  const obj = b as Record<string, unknown>
+  return typeof obj.id === 'string'
+    && typeof obj.stepCategory === 'string'
+    && typeof obj.title === 'string'
+    && Array.isArray(obj.bullets)
+}
+
 export function loadTemplateBlocks(): EditableTemplateBlock[] {
   if (typeof window === 'undefined') return getDefaultTemplateBlocks()
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) return JSON.parse(stored)
-  } catch { /* ignore */ }
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      if (Array.isArray(parsed) && parsed.every(isValidBlock)) return parsed
+      localStorage.removeItem(STORAGE_KEY)
+    }
+  } catch { localStorage.removeItem(STORAGE_KEY) }
   return getDefaultTemplateBlocks()
 }
 

@@ -31,10 +31,12 @@ export function isValidDrawingType(v: string): v is DrawingType {
   return (VALID_DRAWING_TYPES as string[]).includes(v)
 }
 
+const SAFE_DATA_URL = /^data:image\/(png|jpeg|jpg|gif|webp);base64,[A-Za-z0-9+/=]+$/
+
 export function isSafeUrl(url: string): boolean {
   if (!url) return false
   if (url.startsWith('/')) return true // local paths
-  if (url.startsWith('data:image/')) return true // data URLs for uploaded logos
+  if (SAFE_DATA_URL.test(url)) return true // base64 raster images only (no SVG)
   try {
     const parsed = new URL(url)
     return ['http:', 'https:'].includes(parsed.protocol)

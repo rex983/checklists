@@ -352,7 +352,7 @@ export function ChecklistDashboard() {
               <button onClick={() => setShowEmailModal(false)} className="text-lg leading-none px-2 cursor-pointer" style={{ color: 'var(--text-secondary)' }}>×</button>
             </div>
             <div className="flex-1 overflow-auto">
-              <iframe srcDoc={emailHtml} title="Email Preview" className="w-full border-0" style={{ minHeight: '600px', height: '75vh' }} />
+              <iframe srcDoc={emailHtml} sandbox="" title="Email Preview" className="w-full border-0" style={{ minHeight: '600px', height: '75vh' }} />
             </div>
           </div>
         </div>
