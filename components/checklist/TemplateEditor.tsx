@@ -4,13 +4,24 @@ import { useState, useEffect, useRef } from 'react'
 import { EditableTemplateBlock, BulletItem, TEMPLATE_VARIABLES, STEP_CATEGORIES } from '@/lib/checklist/templateTypes'
 import { loadTemplateBlocks, saveTemplateBlocks, getDefaultTemplateBlocks } from '@/lib/checklist/templateStore'
 import { useToast } from '@/components/checklist/Toast'
+import { TemplatePreview } from '@/components/checklist/TemplatePreview'
+import { ManufacturerInfo } from '@/lib/checklist/types'
 
 type StepCategory = 'permit' | 'landprep' | 'scheduling' | 'installation'
 
-export function TemplateEditor({ manufacturerId, title }: { manufacturerId?: string; title?: string } = {}) {
+export function TemplateEditor({
+  manufacturerId,
+  title,
+  manufacturer,
+}: {
+  manufacturerId?: string
+  title?: string
+  manufacturer?: ManufacturerInfo
+} = {}) {
   const [blocks, setBlocks] = useState<EditableTemplateBlock[]>([])
   const [activeTab, setActiveTab] = useState<StepCategory>('permit')
   const [activeBlockId, setActiveBlockId] = useState<string>('')
+  const [showPreview, setShowPreview] = useState(false)
   const { showToast } = useToast()
 
   useEffect(() => {
@@ -58,14 +69,31 @@ export function TemplateEditor({ manufacturerId, title }: { manufacturerId?: str
         <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
           {title ?? 'Template Editor'}
         </h1>
-        <button
-          onClick={resetAll}
-          className="px-4 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer"
-          style={{ borderColor: 'var(--input-border)', color: 'var(--text-secondary)' }}
-        >
-          Reset All Defaults
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setShowPreview(true)}
+            className="px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors cursor-pointer"
+            style={{ background: 'linear-gradient(135deg,#1a3a5c 0%,#2563eb 100%)' }}
+          >
+            Preview
+          </button>
+          <button
+            onClick={resetAll}
+            className="px-4 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer"
+            style={{ borderColor: 'var(--input-border)', color: 'var(--text-secondary)' }}
+          >
+            Reset All Defaults
+          </button>
+        </div>
       </div>
+
+      {showPreview && (
+        <TemplatePreview
+          blocks={blocks}
+          manufacturer={manufacturer}
+          onClose={() => setShowPreview(false)}
+        />
+      )}
 
       {/* Step Tabs */}
       <div className="flex gap-1 mb-5 overflow-x-auto">

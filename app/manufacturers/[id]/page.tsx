@@ -28,6 +28,7 @@ export default function ManufacturerTemplatePage({ params }: { params: Promise<{
       </div>
       <TemplateEditor
         manufacturerId={id}
+        manufacturer={mfg ?? undefined}
         title={mfg ? `${mfg.name} — Checklist Template` : 'Checklist Template'}
       />
     </div>
