@@ -7,18 +7,18 @@ import { useToast } from '@/components/checklist/Toast'
 
 type StepCategory = 'permit' | 'landprep' | 'scheduling' | 'installation'
 
-export function TemplateEditor() {
+export function TemplateEditor({ manufacturerId, title }: { manufacturerId?: string; title?: string } = {}) {
   const [blocks, setBlocks] = useState<EditableTemplateBlock[]>([])
   const [activeTab, setActiveTab] = useState<StepCategory>('permit')
   const [activeBlockId, setActiveBlockId] = useState<string>('')
   const { showToast } = useToast()
 
   useEffect(() => {
-    const loaded = loadTemplateBlocks()
+    const loaded = loadTemplateBlocks(manufacturerId)
     setBlocks(loaded)
     const firstBlock = loaded.find(b => b.stepCategory === 'permit')
     if (firstBlock) setActiveBlockId(firstBlock.id)
-  }, [])
+  }, [manufacturerId])
 
   const tabBlocks = blocks.filter(b => b.stepCategory === activeTab)
   const activeBlock = blocks.find(b => b.id === activeBlockId)
@@ -32,7 +32,7 @@ export function TemplateEditor() {
   function updateBlock(updated: EditableTemplateBlock) {
     const next = blocks.map(b => b.id === updated.id ? updated : b)
     setBlocks(next)
-    saveTemplateBlocks(next)
+    saveTemplateBlocks(next, manufacturerId)
   }
 
   function resetBlock(blockId: string) {
@@ -41,14 +41,14 @@ export function TemplateEditor() {
     if (!defaultBlock) return
     const next = blocks.map(b => b.id === blockId ? defaultBlock : b)
     setBlocks(next)
-    saveTemplateBlocks(next)
+    saveTemplateBlocks(next, manufacturerId)
     showToast('Block reset to default', 'info')
   }
 
   function resetAll() {
     const defaults = getDefaultTemplateBlocks()
     setBlocks(defaults)
-    saveTemplateBlocks(defaults)
+    saveTemplateBlocks(defaults, manufacturerId)
     showToast('All templates reset to defaults', 'info')
   }
 
@@ -56,7 +56,7 @@ export function TemplateEditor() {
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          Template Editor
+          {title ?? 'Template Editor'}
         </h1>
         <button
           onClick={resetAll}

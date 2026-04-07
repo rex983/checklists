@@ -2,6 +2,10 @@ import { EditableTemplateBlock, BulletItem } from './templateTypes'
 
 const STORAGE_KEY = 'bbd-checklist-templates'
 
+function storageKey(manufacturerId?: string): string {
+  return manufacturerId ? `${STORAGE_KEY}:${manufacturerId}` : STORAGE_KEY
+}
+
 let bid = 0
 function bulletId(): string { return `b-${++bid}` }
 
@@ -182,19 +186,20 @@ function isValidBlock(b: unknown): b is EditableTemplateBlock {
     && Array.isArray(obj.bullets)
 }
 
-export function loadTemplateBlocks(): EditableTemplateBlock[] {
+export function loadTemplateBlocks(manufacturerId?: string): EditableTemplateBlock[] {
   if (typeof window === 'undefined') return getDefaultTemplateBlocks()
+  const key = storageKey(manufacturerId)
   try {
-    const stored = localStorage.getItem(STORAGE_KEY)
+    const stored = localStorage.getItem(key)
     if (stored) {
       const parsed = JSON.parse(stored)
       if (Array.isArray(parsed) && parsed.every(isValidBlock)) return parsed
-      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(key)
     }
-  } catch { localStorage.removeItem(STORAGE_KEY) }
+  } catch { localStorage.removeItem(key) }
   return getDefaultTemplateBlocks()
 }
 
-export function saveTemplateBlocks(blocks: EditableTemplateBlock[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(blocks))
+export function saveTemplateBlocks(blocks: EditableTemplateBlock[], manufacturerId?: string) {
+  localStorage.setItem(storageKey(manufacturerId), JSON.stringify(blocks))
 }

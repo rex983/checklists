@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { ManufacturerInfo } from '@/lib/checklist/types'
 import { loadManufacturers, saveManufacturers } from '@/lib/checklist/manufacturerStore'
 import { defaultManufacturers } from '@/lib/checklist/mockData'
@@ -210,9 +211,13 @@ export function ManufacturerManager() {
                     </div>
                   ) : (
                     <div>
-                      <h3 className="text-lg font-semibold mb-1" style={{ color: 'var(--text-primary)' }}>
+                      <Link
+                        href={`/manufacturers/${mfg.id}`}
+                        className="text-lg font-semibold mb-1 inline-block hover:underline"
+                        style={{ color: 'var(--text-primary)' }}
+                      >
                         {mfg.name}
-                      </h3>
+                      </Link>
                       <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
                         <div><span className="font-medium">Contact:</span> {mfg.contactName || '—'}</div>
                         <div><span className="font-medium">Phone:</span> {mfg.phone || '—'}</div>
@@ -243,6 +248,13 @@ export function ManufacturerManager() {
                     </>
                   ) : (
                     <>
+                      <Link
+                        href={`/manufacturers/${mfg.id}`}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer text-white"
+                        style={{ background: 'linear-gradient(135deg,#1a3a5c 0%,#2563eb 100%)' }}
+                      >
+                        Edit Template
+                      </Link>
                       <button
                         onClick={() => startEdit(mfg)}
                         className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
