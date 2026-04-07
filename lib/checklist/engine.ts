@@ -5,7 +5,10 @@ import { buildStepsFromStore, inputToRenderVars } from './templateRenderer'
 
 export function generateChecklist(input: ChecklistInput): ChecklistContent {
   const firstName = input.customerName.split(' ')[0]
-  const blocks = loadTemplateBlocks()
+  // Manufacturer first: load that manufacturer's template (falls back to
+  // defaults if none has been customized yet). Land prep / permitting /
+  // drawing variants are then selected from those blocks downstream.
+  const blocks = loadTemplateBlocks(input.manufacturer.id)
 
   const vars = inputToRenderVars({
     customerFirstName: firstName,
