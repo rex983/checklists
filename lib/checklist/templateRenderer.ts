@@ -15,20 +15,17 @@ export interface RenderVars {
   drawingType?: DrawingType
 }
 
-/** Escape HTML entities in user-provided values before token substitution */
-function escapeHtml(str: string): string {
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-}
-
+/**
+ * Substitute template tokens with their raw values. Escaping is the
+ * responsibility of the renderer (emailTemplate / React JSX / react-pdf
+ * Text nodes all escape on output), so we deliberately do NOT escape
+ * here — escaping twice produces visible mojibake like &amp;lt;.
+ */
 function replaceTokens(text: string, vars: RenderVars): string {
   return text
-    .replace(/\{manufacturer\}/g, escapeHtml(vars.manufacturer))
-    .replace(/\{customerFirstName\}/g, escapeHtml(vars.customerFirstName))
-    .replace(/\{customerEmail\}/g, escapeHtml(vars.customerEmail))
+    .replace(/\{manufacturer\}/g, vars.manufacturer)
+    .replace(/\{customerFirstName\}/g, vars.customerFirstName)
+    .replace(/\{customerEmail\}/g, vars.customerEmail)
     .replace(/\{estimatedWeeks\}/g, String(vars.estimatedWeeks))
     .replace(/\{estimatedWeeksStart\}/g, String(vars.estimatedWeeksStart))
     .replace(/\{successTeamPhone\}/g, vars.successTeamPhone)

@@ -3,10 +3,17 @@ import { ChecklistInput } from '@/lib/checklist/types'
 import { generateChecklist } from '@/lib/checklist/engine'
 import { renderChecklistEmail } from '@/lib/checklist/emailTemplate'
 import { validateChecklistInput, sanitizeString } from '@/lib/checklist/validation'
+import {
+  originMatchesHost,
+  verifySharedSecret,
+  rateLimit,
+  rateLimitResponse,
+} from '@/lib/checklist/apiSecurity'
 
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
 const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'projects@bigbuildingsdirect.com'
 const FROM_NAME = process.env.SENDGRID_FROM_NAME || 'Big Buildings Direct'
+const SEND_SECRET = process.env.CHECKLIST_SEND_SECRET
 
 /**
  * POST /api/checklist/send
@@ -19,14 +26,16 @@ const FROM_NAME = process.env.SENDGRID_FROM_NAME || 'Big Buildings Direct'
  * Returns: { success: true, templateKey, customerEmail }
  */
 export async function POST(request: NextRequest) {
-  // CSRF: reject cross-origin requests unless from allowed origins
-  const origin = request.headers.get('origin')
-  const host = request.headers.get('host')
-  if (origin && host && !origin.includes(host)) {
-    const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') ?? []
-    if (!ALLOWED_ORIGINS.includes(origin)) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
+  // Rate limit per IP
+  const rl = rateLimit(request, 'send', 30)
+  if (!rl.ok) return rateLimitResponse(rl.retryAfter)
+
+  // Auth: must either originate from this host (browser, same-origin)
+  // OR present a valid shared secret (server-to-server callers).
+  const sameOrigin = originMatchesHost(request)
+  const hasSecret = verifySharedSecret(request, 'x-checklist-secret', SEND_SECRET)
+  if (!sameOrigin && !hasSecret) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   try {

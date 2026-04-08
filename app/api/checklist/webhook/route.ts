@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateChecklist } from '@/lib/checklist/engine'
 import { renderChecklistEmail } from '@/lib/checklist/emailTemplate'
 import { validateEmail, sanitizeString, isValidFoundationType, isValidPermitStatus } from '@/lib/checklist/validation'
+import { verifySharedSecret, rateLimit, rateLimitResponse } from '@/lib/checklist/apiSecurity'
 
 const WEBHOOK_SECRET = process.env.CHECKLIST_WEBHOOK_SECRET
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
@@ -24,14 +25,17 @@ const FROM_NAME = process.env.SENDGRID_FROM_NAME || 'Big Buildings Direct'
  *   Headers: { "x-webhook-secret": "<CHECKLIST_WEBHOOK_SECRET>" }
  */
 export async function POST(request: NextRequest) {
-  // Mandatory webhook authentication
+  // Rate limit per IP
+  const rl = rateLimit(request, 'webhook', 60)
+  if (!rl.ok) return rateLimitResponse(rl.retryAfter)
+
+  // Mandatory webhook authentication (constant-time)
   if (!WEBHOOK_SECRET) {
     console.error('CHECKLIST_WEBHOOK_SECRET is not configured')
     return NextResponse.json({ error: 'Webhook not configured' }, { status: 503 })
   }
 
-  const secret = request.headers.get('x-webhook-secret')
-  if (!secret || secret !== WEBHOOK_SECRET) {
+  if (!verifySharedSecret(request, 'x-webhook-secret', WEBHOOK_SECRET)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
