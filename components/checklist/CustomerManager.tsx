@@ -7,7 +7,7 @@ import { loadManufacturers } from '@/lib/checklist/manufacturerStore'
 import { sendChecklistEmail } from '@/lib/checklist/checklistService'
 import { useToast } from '@/components/checklist/Toast'
 
-const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
+const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Asphalt', 'Gravel', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
 const PERMIT_STATUSES: PermitStatus[] = ['No Permit', 'Pulling a Permit']
 const DRAWING_TYPES: DrawingType[] = ['Generic', 'As-Built']
 const STATUSES: ChecklistStatus[] = ['Not Sent', 'Sent', 'Viewed']

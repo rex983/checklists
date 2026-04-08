@@ -1,4 +1,4 @@
-export type FoundationType = 'Concrete' | 'Level Ground' | 'Stem Wall' | 'Mixed' | 'Other'
+export type FoundationType = 'Concrete' | 'Asphalt' | 'Gravel' | 'Level Ground' | 'Stem Wall' | 'Mixed' | 'Other'
 export type PermitStatus = 'No Permit' | 'Pulling a Permit'
 export type DrawingType = 'As-Built' | 'Generic'
 

@@ -13,7 +13,7 @@ import { useToast } from '@/components/checklist/Toast'
 /* eslint-disable @next/next/no-img-element */
 import { generateChecklistPDF } from '@/components/checklist/ChecklistPDF'
 
-const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
+const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Asphalt', 'Gravel', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
 const PERMIT_STATUSES: PermitStatus[] = ['No Permit', 'Pulling a Permit']
 const DRAWING_TYPES: DrawingType[] = ['Generic', 'As-Built']
 

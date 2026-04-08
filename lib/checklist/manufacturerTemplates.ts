@@ -49,7 +49,39 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
       ],
     },
 
-    // Step 2 — Land Prep (Level Ground — covers Asphalt / Gravel / Level Ground)
+    // Step 2 — Land Prep (Asphalt / Gravel / Level Ground all share the same wording)
+    'landprep:asphalt': {
+      id: 'landprep:asphalt',
+      stepCategory: 'landprep',
+      variantLabel: 'Asphalt',
+      title: 'Land Prep',
+      icon: '🏗',
+      timelineLabel: 'Weeks 2–4',
+      action: 'Level your ground within 3 inches and meet any county requirements.',
+      bullets: [
+        b('Make sure your ground is completely level, within 3 inches, so the install crew can install the building properly.'),
+        b('Be sure to follow any requirements your local county may have for the foundation.'),
+        b("Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!"),
+        b('{manufacturer} will be the installer for this building project.', true),
+        b('Once your land is ready, email {successTeamEmail}.', true),
+      ],
+    },
+    'landprep:gravel': {
+      id: 'landprep:gravel',
+      stepCategory: 'landprep',
+      variantLabel: 'Gravel',
+      title: 'Land Prep',
+      icon: '🏗',
+      timelineLabel: 'Weeks 2–4',
+      action: 'Level your ground within 3 inches and meet any county requirements.',
+      bullets: [
+        b('Make sure your ground is completely level, within 3 inches, so the install crew can install the building properly.'),
+        b('Be sure to follow any requirements your local county may have for the foundation.'),
+        b("Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!"),
+        b('{manufacturer} will be the installer for this building project.', true),
+        b('Once your land is ready, email {successTeamEmail}.', true),
+      ],
+    },
     'landprep:level-ground': {
       id: 'landprep:level-ground',
       stepCategory: 'landprep',

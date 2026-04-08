@@ -74,6 +74,8 @@ function getPermitBlockId(permitStatus: PermitStatus, drawingType?: DrawingType)
 function getLandprepBlockId(foundationType: FoundationType): string {
   const map: Record<FoundationType, string> = {
     'Concrete': 'landprep:concrete',
+    'Asphalt': 'landprep:asphalt',
+    'Gravel': 'landprep:gravel',
     'Level Ground': 'landprep:level-ground',
     'Stem Wall': 'landprep:stem-wall',
     'Mixed': 'landprep:mixed',

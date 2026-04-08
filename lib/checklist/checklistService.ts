@@ -78,6 +78,8 @@ export function mapOrderToChecklistInput(
 
   const foundationMap: Record<string, ChecklistInput['foundationType']> = {
     'Concrete': 'Concrete',
+    'Asphalt': 'Asphalt',
+    'Gravel': 'Gravel',
     'Level Ground': 'Level Ground',
     'Stem Wall': 'Stem Wall',
     'Mixed': 'Mixed',

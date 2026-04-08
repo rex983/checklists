@@ -16,7 +16,7 @@ import { STEP_COLORS } from '@/lib/checklist/colors'
 
 type Mode = 'page' | 'email' | 'pdf'
 
-const FOUNDATIONS: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
+const FOUNDATIONS: FoundationType[] = ['Concrete', 'Asphalt', 'Gravel', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
 const PERMITS: PermitStatus[] = ['No Permit', 'Pulling a Permit']
 const DRAWINGS: DrawingType[] = ['Generic', 'As-Built']
 

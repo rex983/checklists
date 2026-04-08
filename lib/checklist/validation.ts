@@ -3,7 +3,7 @@ import { FoundationType, PermitStatus, DrawingType } from './types'
 const EMAIL_REGEX = /^[^\s@<>\r\n]+@[^\s@<>\r\n]+\.[^\s@<>\r\n]+$/
 const UNSAFE_CHARS = /[\r\n\0]/
 
-const VALID_FOUNDATIONS: FoundationType[] = ['Concrete', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
+const VALID_FOUNDATIONS: FoundationType[] = ['Concrete', 'Asphalt', 'Gravel', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
 const VALID_PERMIT_STATUSES: PermitStatus[] = ['No Permit', 'Pulling a Permit']
 const VALID_DRAWING_TYPES: DrawingType[] = ['As-Built', 'Generic']
 
