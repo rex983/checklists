@@ -44,10 +44,10 @@ export function renderChecklistEmail(checklist: ChecklistContent, pdfUrl?: strin
                 </tr>
                 <tr>
                   <td style="padding:14px 20px 6px;">
-                    <div style="background:${color}0D;border-left:3px solid ${color};border-radius:4px;padding:10px 14px;margin-bottom:12px;">
+                    ${step.action ? `<div style="background:${color}0D;border-left:3px solid ${color};border-radius:4px;padding:10px 14px;margin-bottom:12px;">
                       <p style="margin:0 0 2px;color:${color};font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Your Action</p>
                       <p style="margin:0;color:#333;font-size:14px;font-weight:600;">${escapeHtml(step.action)}</p>
-                    </div>
+                    </div>` : ''}
                     <ul style="margin:0;padding-left:20px;">
                     ${bulletsHtml}
                     </ul>

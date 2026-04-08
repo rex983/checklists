@@ -418,20 +418,22 @@ function StepAccordion({ step, color, expanded, onToggle, checkedItems, onToggle
       {expanded && (
         <div className="px-4 py-4">
           {/* Action Callout */}
-          <div
-            className="rounded-lg px-4 py-3 mb-4 flex items-start gap-3"
-            style={{ background: `${color}0D`, borderLeft: `3px solid ${color}` }}
-          >
-            <span className="text-lg flex-shrink-0 mt-0.5">👉</span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide mb-0.5" style={{ color }}>
-                Your Action
-              </p>
-              <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
-                {step.action}
-              </p>
+          {step.action && (
+            <div
+              className="rounded-lg px-4 py-3 mb-4 flex items-start gap-3"
+              style={{ background: `${color}0D`, borderLeft: `3px solid ${color}` }}
+            >
+              <span className="text-lg flex-shrink-0 mt-0.5">👉</span>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wide mb-0.5" style={{ color }}>
+                  Your Action
+                </p>
+                <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
+                  {step.action}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Checkbox Bullets */}
           <div className="flex flex-col gap-2">

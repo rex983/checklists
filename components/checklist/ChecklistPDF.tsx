@@ -134,12 +134,14 @@ function ChecklistDocument({ checklist }: { checklist: ChecklistContent }) {
                 <Text style={s.stepTimeline}>{step.timelineLabel}</Text>
               </View>
               <View style={s.stepBody}>
-                <View style={[s.actionBox, { backgroundColor: `${color}11`, borderLeft: `2px solid ${color}` }]}>
-                  <View>
-                    <Text style={[s.actionLabel, { color }]}>Your Action</Text>
-                    <Text style={s.actionText}>{step.action}</Text>
+                {step.action ? (
+                  <View style={[s.actionBox, { backgroundColor: `${color}11`, borderLeft: `2px solid ${color}` }]}>
+                    <View>
+                      <Text style={[s.actionLabel, { color }]}>Your Action</Text>
+                      <Text style={s.actionText}>{step.action}</Text>
+                    </View>
                   </View>
-                </View>
+                ) : null}
                 {step.bullets.map((b, j) => (
                   <View key={j} style={s.bulletRow}>
                     <Text style={{ fontSize: 7, color: '#999', marginRight: 4 }}>•</Text>
