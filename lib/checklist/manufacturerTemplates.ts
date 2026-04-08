@@ -103,7 +103,7 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
           ['No Permit'],
         ),
         bIf(
-          "Now that your foundation is prepared you can move on to the scheduling portion of the project You're almost there!.",
+          "Now that your foundation is prepared you can move on to the scheduling portion of the project You're almost there!",
           'permitStatus',
           ['No Permit'],
         ),
@@ -125,7 +125,7 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
       bullets: [
         b('Make sure your ground is completely level, within 3 inches, so the install crew can install the building properly.'),
         b('Be sure to follow any requirements your local county may have for the foundation.'),
-        b("Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!."),
+        b("Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!"),
         b('{manufacturer} will be the installer for this building project.', true),
         b('Once your land is ready, email {successTeamEmail}.', true),
       ],
@@ -141,7 +141,7 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
       bullets: [
         b('Make sure your ground is completely level, within 3 inches, so the install crew can install the building properly.'),
         b('Be sure to follow any requirements your local county may have for the foundation.'),
-        b("Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!."),
+        b("Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!"),
         b('{manufacturer} will be the installer for this building project.', true),
         b('Once your land is ready, email {successTeamEmail}.', true),
       ],
@@ -157,12 +157,7 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
       bullets: [
         b('Make sure your ground is completely level, within 3 inches, so the install crew can install the building properly.'),
         b('Be sure to follow any requirements your local county may have for the foundation.'),
-        bIf(
-          "Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!.",
-          'permitStatus',
-          ['Pulling a Permit'],
-          "Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!",
-        ),
+        b("Now that your land is prepared you can move on to the scheduling portion of the project. You're almost there!"),
         b('{manufacturer} will be the installer for this building project.', true),
         b('Once your land is ready, email {successTeamEmail}.', true),
       ],
