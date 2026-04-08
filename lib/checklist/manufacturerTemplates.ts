@@ -15,6 +15,22 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
   Partial<Record<string, EditableTemplateBlock>>
 > = {
   'american-steel': {
+    // Step 1 — Permitting (Generic Drawings variant)
+    'permit:generic': {
+      id: 'permit:generic',
+      stepCategory: 'permit',
+      variantLabel: 'Generic Drawings',
+      title: 'Permitting',
+      icon: '📋',
+      timelineLabel: 'Weeks 1–2',
+      action: 'Wait for your generic engineered drawings, then apply for your permit.',
+      bullets: [
+        b('Your engineered drawings should be sent to you within 2 weeks of your order being sent to the installers. If you do not receive your engineered drawings within 2 weeks of your order being sent to the installers, give them a call and let them know you need your set of generic engineering drawings. Their information can be found at the top of the page.'),
+        b('Once you have your generic engineered drawings in hand, you will be able to apply for permitting with your local county. Be sure to check with your local county for all documentation requirements. If the permit office requires custom site-specific engineered drawings, we can have those custom drawings made for you at an additional cost.'),
+        b('After the permit is accepted, you are ready for the next step, preparing your land!'),
+      ],
+    },
+
     // Step 1 — Permitting (As-Built variant)
     'permit:as-built': {
       id: 'permit:as-built',
