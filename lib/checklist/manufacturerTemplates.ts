@@ -28,7 +28,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'No Permit',
       title: 'Permitting',
       icon: '📋',
-      timelineLabel: 'No action needed',
+      timelineLabel: '',
       action: '',
       bullets: [
         b("Permitting is the customer's responsibility. If you decide to pull a permit, you can get engineered drawings from the installers. Their contact information can be found at the top of this page. Depending on your location, the drawings may or may not come at an additional cost."),
@@ -42,7 +42,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Generic Drawings',
       title: 'Permitting',
       icon: '📋',
-      timelineLabel: 'Weeks 1–2',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('Your engineered drawings should be sent to you within 2 weeks of your order being sent to the installers. If you do not receive your engineered drawings within 2 weeks of your order being sent to the installers, give them a call and let them know you need your set of generic engineering drawings. Their information can be found at the top of the page.'),
@@ -58,7 +58,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'As-Built Drawings',
       title: 'Permitting',
       icon: '📋',
-      timelineLabel: 'Weeks 1–2',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('After you sign your order form, please allow 5-7 business days for the order to be completely processed.'),
@@ -75,7 +75,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Concrete',
       title: 'Land Prep',
       icon: '🏗',
-      timelineLabel: 'Weeks 2–6',
+      timelineLabel: '',
       action: '',
       bullets: [
         // Pulling a Permit (As-Built / Generic)
@@ -118,7 +118,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Asphalt',
       title: 'Land Prep',
       icon: '🏗',
-      timelineLabel: 'Weeks 2–4',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('Make sure your ground is completely level, within 3 inches, so the install crew can install the building properly.'),
@@ -134,7 +134,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Gravel',
       title: 'Land Prep',
       icon: '🏗',
-      timelineLabel: 'Weeks 2–4',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('Make sure your ground is completely level, within 3 inches, so the install crew can install the building properly.'),
@@ -150,7 +150,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Level Ground',
       title: 'Land Prep',
       icon: '🏗',
-      timelineLabel: 'Weeks 2–4',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('Make sure your ground is completely level, within 3 inches, so the install crew can install the building properly.'),
@@ -168,7 +168,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Stem Wall',
       title: 'Land Prep',
       icon: '🏗',
-      timelineLabel: 'Weeks 2–6',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('Give your concrete contractor the foundation details page. This can be found in the set of engineered drawings you receive from your installers.'),
@@ -185,7 +185,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Mixed',
       title: 'Land Prep',
       icon: '🏗',
-      timelineLabel: 'Weeks 2–6',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('Give your concrete contractor the foundation details page. This can be found in the set of engineered drawings you receive from your installers. If you have questions about foundation ask your installers.'),
@@ -202,7 +202,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Custom',
       title: 'Land Prep',
       icon: '🏗',
-      timelineLabel: 'Weeks 2–6',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('Give your concrete contractor the foundation details page. This can be found in the set of engineered drawings you receive from your installers. If you have questions about foundation ask your installers.'),
@@ -219,7 +219,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Default',
       title: 'Scheduling',
       icon: '🚚',
-      timelineLabel: 'Week {estimatedWeeksStart}–{estimatedWeeks}',
+      timelineLabel: '',
       action: '',
       bullets: [
         bIf(
@@ -245,7 +245,7 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
       variantLabel: 'Default',
       title: 'Delivered Installed Building',
       icon: '🔧',
-      timelineLabel: 'Week {estimatedWeeks}+',
+      timelineLabel: '',
       action: '',
       bullets: [
         b('The best step of the whole process! The installation crew comes to delivers and installs your building!! Congratulations and enjoy your brand new building!'),
