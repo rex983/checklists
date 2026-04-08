@@ -59,11 +59,9 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
       timelineLabel: 'Week {estimatedWeeksStart}–{estimatedWeeks}',
       action: 'Email or text photos of your permit and site work to the Success Team.',
       bullets: [
-        b('** MOST IMPORTANT ** Email or text pictures of permit and site work to {successTeamPhone} or {successTeamEmail}!!'),
+        b('** MOST IMPORTANT** Email or Text Pictures of Permit and Site Work to {successTeamPhone} or {successTeamEmail}!!'),
         b('Now that your permit has been approved and your land is ready for install, the next step is to text or email pictures of your permit and site work. (Both have to be completed before scheduling.)'),
-        b("For many customers, the most frustrating part of the process is the wait in between being ready for install and the installation crew coming to deliver the building. Once you're placed on the schedule, the scheduler looks for a delivery date."),
-        b('Our installers are able to do these buildings at this price point by going out on run deliveries and taking multiple buildings on a truck for multiple installs per run. Any delivery time given is an estimate based on weather conditions and volume of orders received in your area.'),
-        b('Once the installers have a delivery date for you, they will typically reach out to you 1-2 weeks prior with your estimated delivery date.'),
+        b("For many customers, the most frustrating part of the process is the wait in between being ready for install and the installation crew coming to deliver the building. Once you're placed on the schedule, the scheduler looks for a delivery date. Our installers are able to do these buildings at this price point by going out on run deliveries and taking multiple buildings on a truck for multiple installs per run. Any delivery time given is an estimate based on weather conditions and volume of orders received in your area. Once the installers have a delivery date for you, they will typically reach out to you 1-2 weeks prior with your estimated delivery date."),
       ],
     },
 
