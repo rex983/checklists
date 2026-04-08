@@ -49,6 +49,23 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
       ],
     },
 
+    // Step 2 — Land Prep (Stem Wall / Strip Footer variant — mirrors Concrete)
+    'landprep:stem-wall': {
+      id: 'landprep:stem-wall',
+      stepCategory: 'landprep',
+      variantLabel: 'Stem Wall',
+      title: 'Land Prep',
+      icon: '🏗',
+      timelineLabel: 'Weeks 2–6',
+      action: 'Pour your strip footer exactly to the site-specific engineered plans.',
+      bullets: [
+        b('Give your concrete contractor the foundation details page. This can be found in the set of engineered drawings you receive from your installers.'),
+        b("Your concrete must be poured exactly as per your site-specific engineered plans. Your engineer has them constructed to match your site specifically and follow any local county requirements. Your almost to the end now it's time to call and get on schedule!!"),
+        b('{manufacturer} will be the installer for this building project.', true),
+        b('Once your land is ready, email {successTeamEmail}.', true),
+      ],
+    },
+
     // Step 3 — Scheduling
     'scheduling:default': {
       id: 'scheduling:default',
