@@ -2,6 +2,14 @@ import { ChecklistInput, ManufacturerInfo } from './types'
 
 export const defaultManufacturers: ManufacturerInfo[] = [
   {
+    id: 'american-steel',
+    name: 'American Steel',
+    phone: '1-866-730-9865',
+    email: 'orders@americansteelcarports.com',
+    contactName: 'American Steel Team',
+    logoUrl: '/logos/American-Steel.png',
+  },
+  {
     id: 'eagle-carports',
     name: 'Eagle Carports',
     phone: '(800) 283-2453',

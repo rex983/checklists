@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { EditableTemplateBlock, BulletItem, TEMPLATE_VARIABLES, STEP_CATEGORIES } from '@/lib/checklist/templateTypes'
-import { loadTemplateBlocks, saveTemplateBlocks, getDefaultTemplateBlocks } from '@/lib/checklist/templateStore'
+import { loadTemplateBlocks, saveTemplateBlocks, getDefaultTemplateBlocksFor } from '@/lib/checklist/templateStore'
 import { useToast } from '@/components/checklist/Toast'
 import { TemplatePreview } from '@/components/checklist/TemplatePreview'
 import { ManufacturerInfo } from '@/lib/checklist/types'
@@ -47,7 +47,7 @@ export function TemplateEditor({
   }
 
   function resetBlock(blockId: string) {
-    const defaults = getDefaultTemplateBlocks()
+    const defaults = getDefaultTemplateBlocksFor(manufacturerId)
     const defaultBlock = defaults.find(b => b.id === blockId)
     if (!defaultBlock) return
     const next = blocks.map(b => b.id === blockId ? defaultBlock : b)
@@ -57,7 +57,7 @@ export function TemplateEditor({
   }
 
   function resetAll() {
-    const defaults = getDefaultTemplateBlocks()
+    const defaults = getDefaultTemplateBlocksFor(manufacturerId)
     setBlocks(defaults)
     saveTemplateBlocks(defaults, manufacturerId)
     showToast('All templates reset to defaults', 'info')

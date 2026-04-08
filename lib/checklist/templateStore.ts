@@ -1,4 +1,5 @@
 import { EditableTemplateBlock, BulletItem } from './templateTypes'
+import { applyManufacturerOverrides } from './manufacturerTemplates'
 
 const STORAGE_KEY = 'bbd-checklist-templates'
 
@@ -187,7 +188,8 @@ function isValidBlock(b: unknown): b is EditableTemplateBlock {
 }
 
 export function loadTemplateBlocks(manufacturerId?: string): EditableTemplateBlock[] {
-  if (typeof window === 'undefined') return getDefaultTemplateBlocks()
+  const fallback = () => applyManufacturerOverrides(getDefaultTemplateBlocks(), manufacturerId)
+  if (typeof window === 'undefined') return fallback()
   const key = storageKey(manufacturerId)
   try {
     const stored = localStorage.getItem(key)
@@ -197,7 +199,11 @@ export function loadTemplateBlocks(manufacturerId?: string): EditableTemplateBlo
       localStorage.removeItem(key)
     }
   } catch { localStorage.removeItem(key) }
-  return getDefaultTemplateBlocks()
+  return fallback()
+}
+
+export function getDefaultTemplateBlocksFor(manufacturerId?: string): EditableTemplateBlock[] {
+  return applyManufacturerOverrides(getDefaultTemplateBlocks(), manufacturerId)
 }
 
 export function saveTemplateBlocks(blocks: EditableTemplateBlock[], manufacturerId?: string) {
