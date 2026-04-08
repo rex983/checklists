@@ -116,6 +116,23 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
       ],
     },
 
+    // Step 2 — Land Prep (Mixed foundation)
+    'landprep:mixed': {
+      id: 'landprep:mixed',
+      stepCategory: 'landprep',
+      variantLabel: 'Mixed',
+      title: 'Land Prep',
+      icon: '🏗',
+      timelineLabel: 'Weeks 2–6',
+      action: 'Pour your foundation exactly to the site-specific engineered plans.',
+      bullets: [
+        b('Give your concrete contractor the foundation details page. This can be found in the set of engineered drawings you receive from your installers. If you have questions about foundation ask your installers.'),
+        b("Your foundation must be poured exactly as per your site-specific engineered plans. Your engineer has them constructed to match your building specifically and follow any local county requirements. Your almost to the end now it's time to call and get on schedule!!"),
+        b('{manufacturer} will be the installer for this building project.', true),
+        b('Once your land is ready, email {successTeamEmail}.', true),
+      ],
+    },
+
     // Step 3 — Scheduling
     'scheduling:default': {
       id: 'scheduling:default',
