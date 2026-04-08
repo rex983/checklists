@@ -15,14 +15,12 @@ function bIf(
 }
 
 /**
- * Per-manufacturer template overrides. Keyed by manufacturer id, then by
- * block id. Anything not overridden falls back to the default block.
+ * Default override set applied to every manufacturer that doesn't have
+ * its own entry in MANUFACTURER_TEMPLATE_OVERRIDES below. Originally
+ * authored from the American Steel spreadsheet, now shared as the BBD-wide
+ * baseline because all installers follow the same workflow.
  */
-export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
-  string,
-  Partial<Record<string, EditableTemplateBlock>>
-> = {
-  'american-steel': {
+const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
     // Step 1 — Permitting (No Permit variant)
     'permit:no-permit': {
       id: 'permit:no-permit',
@@ -253,15 +251,25 @@ export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
         b('The best step of the whole process! The installation crew comes to delivers and installs your building!! Congratulations and enjoy your brand new building!'),
       ],
     },
-  },
+}
+
+/**
+ * Per-manufacturer overrides. Anything not listed here uses SHARED_OVERRIDES.
+ * Add a manufacturer id with its own block map when its workflow diverges.
+ */
+export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
+  string,
+  Partial<Record<string, EditableTemplateBlock>>
+> = {
+  'american-steel': SHARED_OVERRIDES,
 }
 
 export function applyManufacturerOverrides(
   blocks: EditableTemplateBlock[],
   manufacturerId?: string,
 ): EditableTemplateBlock[] {
-  if (!manufacturerId) return blocks
-  const overrides = MANUFACTURER_TEMPLATE_OVERRIDES[manufacturerId]
-  if (!overrides) return blocks
+  const overrides = manufacturerId
+    ? MANUFACTURER_TEMPLATE_OVERRIDES[manufacturerId] ?? SHARED_OVERRIDES
+    : SHARED_OVERRIDES
   return blocks.map((block) => overrides[block.id] ?? block)
 }
