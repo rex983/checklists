@@ -254,22 +254,40 @@ const SHARED_OVERRIDES: Partial<Record<string, EditableTemplateBlock>> = {
 }
 
 /**
- * Per-manufacturer overrides. Anything not listed here uses SHARED_OVERRIDES.
- * Add a manufacturer id with its own block map when its workflow diverges.
+ * The ordered baseline used by every manufacturer. Edit blocks here and
+ * "Reset to Default" in the editor will pull these values.
+ */
+export const DEFAULT_TEMPLATE_BLOCKS: EditableTemplateBlock[] = [
+  SHARED_OVERRIDES['permit:no-permit']!,
+  SHARED_OVERRIDES['permit:generic']!,
+  SHARED_OVERRIDES['permit:as-built']!,
+  SHARED_OVERRIDES['landprep:concrete']!,
+  SHARED_OVERRIDES['landprep:asphalt']!,
+  SHARED_OVERRIDES['landprep:gravel']!,
+  SHARED_OVERRIDES['landprep:level-ground']!,
+  SHARED_OVERRIDES['landprep:stem-wall']!,
+  SHARED_OVERRIDES['landprep:mixed']!,
+  SHARED_OVERRIDES['landprep:other']!,
+  SHARED_OVERRIDES['scheduling:default']!,
+  SHARED_OVERRIDES['installation:default']!,
+]
+
+/**
+ * Per-manufacturer overrides. Empty by default — every manufacturer uses
+ * DEFAULT_TEMPLATE_BLOCKS. Add an entry here when a manufacturer's
+ * workflow diverges from the baseline.
  */
 export const MANUFACTURER_TEMPLATE_OVERRIDES: Record<
   string,
   Partial<Record<string, EditableTemplateBlock>>
-> = {
-  'american-steel': SHARED_OVERRIDES,
-}
+> = {}
 
 export function applyManufacturerOverrides(
   blocks: EditableTemplateBlock[],
   manufacturerId?: string,
 ): EditableTemplateBlock[] {
-  const overrides = manufacturerId
-    ? MANUFACTURER_TEMPLATE_OVERRIDES[manufacturerId] ?? SHARED_OVERRIDES
-    : SHARED_OVERRIDES
+  if (!manufacturerId) return blocks
+  const overrides = MANUFACTURER_TEMPLATE_OVERRIDES[manufacturerId]
+  if (!overrides) return blocks
   return blocks.map((block) => overrides[block.id] ?? block)
 }
