@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateChecklist } from '@/lib/checklist/engine'
 import { renderChecklistEmail } from '@/lib/checklist/emailTemplate'
-import { validateEmail, sanitizeString, isValidFoundationType, isValidPermitStatus } from '@/lib/checklist/validation'
+import { validateEmail, sanitizeString, isValidFoundationType } from '@/lib/checklist/validation'
 import { verifySharedSecret, rateLimit, rateLimitResponse } from '@/lib/checklist/apiSecurity'
 
 const WEBHOOK_SECRET = process.env.CHECKLIST_WEBHOOK_SECRET

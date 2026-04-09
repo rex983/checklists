@@ -32,7 +32,7 @@ function replaceTokens(text: string, vars: RenderVars): string {
     .replace(/\{successTeamEmail\}/g, vars.successTeamEmail)
 }
 
-export function renderTemplateBlock(block: EditableTemplateBlock, vars: RenderVars): ChecklistStep {
+function renderTemplateBlock(block: EditableTemplateBlock, vars: RenderVars): ChecklistStep {
   const bullets: string[] = []
   for (const b of block.bullets) {
     if (!b.condition) {
