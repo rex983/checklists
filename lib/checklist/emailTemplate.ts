@@ -65,7 +65,7 @@ export function renderChecklistEmail(checklist: ChecklistContent, pdfUrl?: strin
     : ''
 
   const mfgLogoHtml = checklist.manufacturer.logoUrl && isSafeUrl(checklist.manufacturer.logoUrl)
-    ? `<img src="${escapeHtml(checklist.manufacturer.logoUrl)}" alt="${escapeHtml(checklist.manufacturer.name)}" style="width:60px;height:60px;object-fit:contain;border-radius:8px;" />`
+    ? `<img src="${escapeHtml(checklist.manufacturer.logoUrl)}" alt="${escapeHtml(checklist.manufacturer.name)}" style="width:90px;height:90px;object-fit:contain;border-radius:10px;" />`
     : ''
 
   return `<!DOCTYPE html>
@@ -92,7 +92,7 @@ export function renderChecklistEmail(checklist: ChecklistContent, pdfUrl?: strin
             <td style="padding:28px 40px 8px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
                 <tr>
-                  ${mfgLogoHtml ? `<td style="width:72px;padding-right:14px;vertical-align:middle;">${mfgLogoHtml}</td>` : ''}
+                  ${mfgLogoHtml ? `<td style="width:104px;padding-right:16px;vertical-align:middle;">${mfgLogoHtml}</td>` : ''}
                   <td style="vertical-align:middle;">
                     <p style="margin:0 0 2px;font-size:16px;font-weight:700;color:#1a3a5c;">${escapeHtml(checklist.manufacturer.name)}</p>
                     <p style="margin:0;font-size:12px;color:#555;">${escapeHtml(checklist.manufacturer.contactName)} &bull; ${escapeHtml(checklist.manufacturer.phone)}</p>

@@ -155,7 +155,7 @@ export function ManufacturerManager() {
                 {/* Logo */}
                 <div className="flex-shrink-0">
                   <div
-                    className="w-24 h-24 rounded-lg border-2 border-dashed flex items-center justify-center overflow-hidden cursor-pointer relative group"
+                    className="w-36 h-36 rounded-xl border-2 border-dashed flex items-center justify-center overflow-hidden cursor-pointer relative group"
                     style={{ borderColor: 'var(--input-border)', background: 'var(--background)' }}
                     onClick={() => {
                       if (fileInputRef.current) {

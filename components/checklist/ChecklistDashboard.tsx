@@ -243,8 +243,8 @@ export function ChecklistDashboard() {
         <div className="p-6 pb-0">
           <div className="flex items-center gap-5 mb-5">
             {checklist.manufacturer.logoUrl && (
-              <div className="flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden bg-white flex items-center justify-center border-2" style={{ borderColor: 'var(--table-border)' }}>
-                <img src={checklist.manufacturer.logoUrl} alt={checklist.manufacturer.name} className="object-contain w-full h-full p-2" />
+              <div className="flex-shrink-0 w-28 h-28 rounded-xl overflow-hidden bg-white flex items-center justify-center border-2" style={{ borderColor: 'var(--table-border)' }}>
+                <img src={checklist.manufacturer.logoUrl} alt={checklist.manufacturer.name} className="object-contain w-full h-full p-3" />
               </div>
             )}
             <div>

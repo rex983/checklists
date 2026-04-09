@@ -33,7 +33,7 @@ const s = StyleSheet.create({
     flex: 1,
     gap: 8,
   },
-  mfgLogo: { width: 36, height: 36, objectFit: 'contain' },
+  mfgLogo: { width: 56, height: 56, objectFit: 'contain' },
   mfgName: { fontSize: 9, fontFamily: 'Helvetica-Bold', color: '#1a3a5c' },
   mfgDetail: { fontSize: 7, color: '#555' },
   orderBox: {
