@@ -11,8 +11,8 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "BBD Customer Checklist — Prototype",
-  description: "Auto-generated customer checklists for Big Buildings Direct",
+  title: "BBD Project Checklist — Prototype",
+  description: "Auto-generated project checklists for Big Buildings Direct",
 };
 
 export default function RootLayout({

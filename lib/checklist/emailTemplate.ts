@@ -83,7 +83,7 @@ export function renderChecklistEmail(checklist: ChecklistContent, pdfUrl?: strin
           <tr>
             <td style="background:linear-gradient(135deg,#1a3a5c 0%,#2563eb 100%);padding:28px 40px;text-align:center;">
               <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:-0.5px;">Big Buildings Direct</h1>
-              <p style="margin:6px 0 0;color:rgba(255,255,255,0.8);font-size:13px;">Your Next Steps Checklist</p>
+              <p style="margin:6px 0 0;color:rgba(255,255,255,0.8);font-size:13px;">Your Project Checklist</p>
             </td>
           </tr>
 
@@ -150,7 +150,7 @@ ${stepsHtml}
           <tr>
             <td style="background-color:#f8fafc;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
               <p style="margin:0;color:#94a3b8;font-size:11px;">
-                Big Buildings Direct &bull; Customer Checklist
+                Big Buildings Direct &bull; Project Checklist
               </p>
             </td>
           </tr>

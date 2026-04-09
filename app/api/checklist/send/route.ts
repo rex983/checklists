@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
               to: [{ email: input.customerEmail, name: input.customerName }],
             }],
             from: { email: FROM_EMAIL, name: FROM_NAME },
-            subject: `Your Next Steps Checklist — Order ${input.orderNumber}`,
+            subject: `Your Project Checklist — Order ${input.orderNumber}`,
             content: [{ type: 'text/html', value: emailHtml }],
           }),
           signal: controller.signal,

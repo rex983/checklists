@@ -140,7 +140,7 @@ export function ChecklistDashboard() {
     <div>
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
-          Customer Checklist
+          Project Checklist
         </h1>
         <span className="text-xs px-3 py-1 rounded-full font-medium bg-[#fff3e0] text-[#e65100]">
           Prototype — Mock Data

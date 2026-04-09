@@ -269,7 +269,7 @@ function PagePreview({ checklist }: { checklist: ChecklistContent }) {
           style={{ background: 'linear-gradient(135deg,#1a3a5c 0%,#2563eb 100%)' }}
         >
           <p className="text-white text-lg font-bold">Big Buildings Direct</p>
-          <p className="text-white/70 text-xs">Your Next Steps Checklist</p>
+          <p className="text-white/70 text-xs">Your Project Checklist</p>
         </div>
 
         <div className="p-6">

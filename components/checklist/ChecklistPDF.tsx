@@ -97,7 +97,7 @@ function ChecklistDocument({ checklist }: { checklist: ChecklistContent }) {
       <Page size="LETTER" style={s.page}>
         <View style={s.header}>
           <Text style={s.headerTitle}>Big Buildings Direct</Text>
-          <Text style={s.headerSub}>Customer Checklist</Text>
+          <Text style={s.headerSub}>Project Checklist</Text>
         </View>
 
         <View style={s.infoRow}>
