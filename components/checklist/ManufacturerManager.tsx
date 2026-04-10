@@ -19,7 +19,7 @@ export function ManufacturerManager() {
   const [manufacturers, setManufacturers] = useState<ManufacturerInfo[]>([])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draft, setDraft] = useState<Partial<ManufacturerInfo>>({})
-  const [sortBy, setSortBy] = useState<SortKey>('custom')
+  const [sortBy, setSortBy] = useState<SortKey>('name')
   const { showToast } = useToast()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
