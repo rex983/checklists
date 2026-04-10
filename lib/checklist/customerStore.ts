@@ -1,4 +1,5 @@
 import { Customer } from './types'
+import { defaultCustomers } from './mockData'
 
 const STORAGE_KEY = 'bbd-checklist-customers'
 
@@ -21,10 +22,16 @@ export function loadCustomers(): Customer[] {
       if (Array.isArray(parsed) && parsed.every(isValidCustomer)) return parsed
       localStorage.removeItem(STORAGE_KEY) // corrupted data
     }
-  } catch { localStorage.removeItem(STORAGE_KEY) }
-  return []
+  } catch {
+    try { localStorage.removeItem(STORAGE_KEY) } catch {}
+  }
+  // Seed with demo customers on first load
+  saveCustomers(defaultCustomers)
+  return defaultCustomers
 }
 
 export function saveCustomers(customers: Customer[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(customers))
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(customers))
+  } catch {}
 }
