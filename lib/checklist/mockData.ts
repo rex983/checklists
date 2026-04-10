@@ -99,6 +99,7 @@ export const defaultCustomers: Customer[] = [
     checklistStatus: 'Sent',
     notes: '40x60 workshop, customer prefers morning delivery',
     createdAt: '2026-03-28T14:30:00.000Z',
+    sentAt: '2026-03-29T10:15:00.000Z',
   },
   {
     id: 'cust-demo-002',
@@ -133,6 +134,8 @@ export const defaultCustomers: Customer[] = [
     checklistStatus: 'Viewed',
     notes: '50x80 commercial building, engineer stamped drawings required',
     createdAt: '2026-03-15T11:00:00.000Z',
+    sentAt: '2026-03-16T08:45:00.000Z',
+    viewedAt: '2026-03-16T14:22:00.000Z',
   },
   {
     id: 'cust-demo-004',
@@ -150,6 +153,7 @@ export const defaultCustomers: Customer[] = [
     checklistStatus: 'Sent',
     notes: 'High snow load area, needs reinforced trusses',
     createdAt: '2026-04-05T16:45:00.000Z',
+    sentAt: '2026-04-06T09:30:00.000Z',
   },
   {
     id: 'cust-demo-005',
@@ -182,6 +186,8 @@ export const defaultCustomers: Customer[] = [
     checklistStatus: 'Viewed',
     notes: '30x40 garage, customer very responsive',
     createdAt: '2026-03-20T13:10:00.000Z',
+    sentAt: '2026-03-21T11:00:00.000Z',
+    viewedAt: '2026-03-21T18:05:00.000Z',
   },
   {
     id: 'cust-demo-007',
@@ -198,6 +204,7 @@ export const defaultCustomers: Customer[] = [
     checklistStatus: 'Sent',
     notes: 'RV cover, needs extra height clearance',
     createdAt: '2026-04-03T10:30:00.000Z',
+    sentAt: '2026-04-03T14:20:00.000Z',
   },
   {
     id: 'cust-demo-008',

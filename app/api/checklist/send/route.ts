@@ -9,10 +9,8 @@ import {
   rateLimit,
   rateLimitResponse,
 } from '@/lib/checklist/apiSecurity'
+import { isSendGridConfigured, sendChecklistViaEmail } from '@/lib/checklist/sendgridService'
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
-const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'projects@bigbuildingsdirect.com'
-const FROM_NAME = process.env.SENDGRID_FROM_NAME || 'Big Buildings Direct'
 const SEND_SECRET = process.env.CHECKLIST_SEND_SECRET
 
 /**
@@ -71,46 +69,22 @@ export async function POST(request: NextRequest) {
 
     // Generate the checklist
     const checklist = generateChecklist(input)
-    const emailHtml = renderChecklistEmail(checklist)
+    const baseUrl = `${request.nextUrl.protocol}//${request.nextUrl.host}`
+    const trackingPixelUrl = `${baseUrl}/api/checklist/track?cid=${encodeURIComponent(input.orderId)}`
+    const emailHtml = renderChecklistEmail(checklist, undefined, trackingPixelUrl)
 
     // If SendGrid is configured, send the email
-    if (SENDGRID_API_KEY) {
-      const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 15000)
+    if (isSendGridConfigured()) {
+      const result = await sendChecklistViaEmail({
+        toEmail: input.customerEmail,
+        toName: input.customerName,
+        orderNumber: input.orderNumber,
+        html: emailHtml,
+      })
 
-      try {
-        const sgResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${SENDGRID_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            personalizations: [{
-              to: [{ email: input.customerEmail, name: input.customerName }],
-            }],
-            from: { email: FROM_EMAIL, name: FROM_NAME },
-            subject: `Your Project Checklist — Order ${input.orderNumber}`,
-            content: [{ type: 'text/html', value: emailHtml }],
-          }),
-          signal: controller.signal,
-        })
-
-        clearTimeout(timeout)
-
-        if (!sgResponse.ok) {
-          const errorText = await sgResponse.text()
-          console.error('SendGrid error:', errorText)
-          return NextResponse.json(
-            { error: 'Failed to send email' },
-            { status: 502 }
-          )
-        }
-      } catch (fetchError) {
-        clearTimeout(timeout)
-        console.error('SendGrid fetch error:', fetchError instanceof Error ? fetchError.message : 'unknown')
+      if (!result.sent) {
         return NextResponse.json(
-          { error: 'Email service unavailable' },
+          { error: result.error },
           { status: 502 }
         )
       }

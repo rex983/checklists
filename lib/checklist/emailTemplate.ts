@@ -11,7 +11,7 @@ function escapeHtml(text: string): string {
     .replace(/'/g, '&#39;')
 }
 
-export function renderChecklistEmail(checklist: ChecklistContent, pdfUrl?: string): string {
+export function renderChecklistEmail(checklist: ChecklistContent, pdfUrl?: string, trackingPixelUrl?: string): string {
   const stepsHtml = checklist.steps
     .map((step, i) => {
       const color = STEP_COLORS[i % STEP_COLORS.length]
@@ -152,6 +152,7 @@ ${stepsHtml}
               <p style="margin:0;color:#94a3b8;font-size:11px;">
                 Big Buildings Direct &bull; Project Checklist
               </p>
+              ${trackingPixelUrl ? `<img src="${escapeHtml(trackingPixelUrl)}" width="1" height="1" alt="" style="display:block;width:1px;height:1px;border:0;" />` : ''}
             </td>
           </tr>
         </table>

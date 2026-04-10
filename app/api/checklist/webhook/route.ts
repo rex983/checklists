@@ -3,11 +3,9 @@ import { generateChecklist } from '@/lib/checklist/engine'
 import { renderChecklistEmail } from '@/lib/checklist/emailTemplate'
 import { validateEmail, sanitizeString, isValidFoundationType } from '@/lib/checklist/validation'
 import { verifySharedSecret, rateLimit, rateLimitResponse } from '@/lib/checklist/apiSecurity'
+import { isSendGridConfigured, sendChecklistViaEmail } from '@/lib/checklist/sendgridService'
 
 const WEBHOOK_SECRET = process.env.CHECKLIST_WEBHOOK_SECRET
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
-const FROM_EMAIL = process.env.SENDGRID_FROM_EMAIL || 'projects@bigbuildingsdirect.com'
-const FROM_NAME = process.env.SENDGRID_FROM_NAME || 'Big Buildings Direct'
 
 /**
  * POST /api/checklist/webhook
@@ -121,45 +119,25 @@ export async function POST(request: NextRequest) {
     // Generate checklist and send email directly (no internal fetch — avoids SSRF)
     const checklist = generateChecklist(checklistInput)
 
-    if (SENDGRID_API_KEY) {
-      const emailHtml = renderChecklistEmail(checklist)
+    if (isSendGridConfigured()) {
+      const baseUrl = `${request.nextUrl.protocol}//${request.nextUrl.host}`
+      const trackingPixelUrl = `${baseUrl}/api/checklist/track?cid=${encodeURIComponent(checklistInput.orderId)}`
+      const emailHtml = renderChecklistEmail(checklist, undefined, trackingPixelUrl)
+      const result = await sendChecklistViaEmail({
+        toEmail: checklistInput.customerEmail,
+        toName: checklistInput.customerName,
+        orderNumber: checklistInput.orderNumber,
+        html: emailHtml,
+      })
 
-      const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 15000)
-
-      try {
-        const sgResponse = await fetch('https://api.sendgrid.com/v3/mail/send', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${SENDGRID_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            personalizations: [{
-              to: [{ email: checklistInput.customerEmail, name: checklistInput.customerName }],
-            }],
-            from: { email: FROM_EMAIL, name: FROM_NAME },
-            subject: `Your Project Checklist — Order ${checklistInput.orderNumber}`,
-            content: [{ type: 'text/html', value: emailHtml }],
-          }),
-          signal: controller.signal,
-        })
-
-        clearTimeout(timeout)
-
-        if (!sgResponse.ok) {
-          console.error('SendGrid error in webhook')
-          return NextResponse.json({ error: 'Failed to send email' }, { status: 502 })
-        }
-      } catch {
-        clearTimeout(timeout)
-        return NextResponse.json({ error: 'Email service unavailable' }, { status: 502 })
+      if (!result.sent) {
+        return NextResponse.json({ error: result.error }, { status: 502 })
       }
     }
 
     return NextResponse.json({
       success: true,
-      sent: !!SENDGRID_API_KEY,
+      sent: isSendGridConfigured(),
       orderNumber: checklistInput.orderNumber,
       templateKey: checklist.templateKey,
       customerEmail: checklistInput.customerEmail,

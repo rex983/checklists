@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { Customer, ManufacturerInfo, FoundationType, PermitStatus, DrawingType, ChecklistStatus } from '@/lib/checklist/types'
 import { loadCustomers, saveCustomers } from '@/lib/checklist/customerStore'
 import { loadManufacturers } from '@/lib/checklist/manufacturerStore'
-import { sendChecklistEmail } from '@/lib/checklist/checklistService'
+import { ChecklistInput } from '@/lib/checklist/types'
 import { useToast } from '@/components/checklist/Toast'
 
 const FOUNDATION_TYPES: FoundationType[] = ['Concrete', 'Asphalt', 'Gravel', 'Level Ground', 'Stem Wall', 'Mixed', 'Other']
@@ -116,6 +116,30 @@ export function CustomerManager() {
     save(customers.map(c => c.id === id ? { ...c, checklistStatus: status } : c))
   }
 
+  // Poll for view events from tracking pixel
+  useEffect(() => {
+    async function checkViews() {
+      const sentCustomers = customers.filter(c => c.checklistStatus === 'Sent' && !c.viewedAt)
+      if (sentCustomers.length === 0) return
+      try {
+        const ids = sentCustomers.map(c => c.id).join(',')
+        const res = await fetch(`/api/checklist/views?ids=${encodeURIComponent(ids)}`)
+        const { views } = await res.json() as { views: Record<string, string> }
+        if (!views || Object.keys(views).length === 0) return
+        const updated = customers.map(c => {
+          if (views[c.id]) {
+            return { ...c, checklistStatus: 'Viewed' as const, viewedAt: views[c.id] }
+          }
+          return c
+        })
+        save(updated)
+      } catch { /* silent */ }
+    }
+    checkViews()
+    const interval = setInterval(checkViews, 30000) // check every 30s
+    return () => clearInterval(interval)
+  }, [customers.filter(c => c.checklistStatus === 'Sent' && !c.viewedAt).length]) // eslint-disable-line react-hooks/exhaustive-deps
+
   async function sendChecklist(c: Customer) {
     const mfg = mfgMap.get(c.manufacturerId)
     if (!mfg) {
@@ -127,7 +151,7 @@ export function CustomerManager() {
       return
     }
     showToast(`Sending checklist to ${c.email}...`, 'info')
-    const result = await sendChecklistEmail({
+    const input: ChecklistInput = {
       orderId: c.id,
       orderNumber: c.orderNumber,
       customerName: c.name,
@@ -139,9 +163,21 @@ export function CustomerManager() {
       drawingType: c.drawingType,
       manufacturer: mfg,
       estimatedDeliveryWeeks: c.estimatedDeliveryWeeks,
-    })
+    }
+    let result: { success: boolean; sent: boolean; error?: string }
+    try {
+      const response = await fetch('/api/checklist/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+      })
+      result = await response.json()
+    } catch (error) {
+      result = { success: false, sent: false, error: String(error) }
+    }
     if (result.success) {
-      updateStatus(c.id, 'Sent')
+      const now = new Date().toISOString()
+      save(customers.map(cust => cust.id === c.id ? { ...cust, checklistStatus: 'Sent' as const, sentAt: now } : cust))
       showToast(result.sent ? `Checklist emailed to ${c.email}` : `Checklist generated (email not configured)`, result.sent ? 'success' : 'info')
     } else {
       showToast(`Failed: ${result.error}`, 'error')
@@ -368,6 +404,16 @@ export function CustomerManager() {
                     {c.email && <span>{c.email}</span>}
                     {c.phone && <span>{c.phone}</span>}
                   </div>
+                  {(c.sentAt || c.viewedAt) && (
+                    <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[11px] mt-1" style={{ color: 'var(--text-secondary)' }}>
+                      {c.sentAt && (
+                        <span>Sent on {new Date(c.sentAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(c.sentAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
+                      )}
+                      {c.viewedAt && (
+                        <span style={{ color: '#2e7d32' }}>Viewed on {new Date(c.viewedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} at {new Date(c.viewedAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</span>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 {/* Variables */}

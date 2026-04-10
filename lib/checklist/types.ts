@@ -52,6 +52,8 @@ export interface Customer {
   checklistStatus: ChecklistStatus
   notes: string
   createdAt: string
+  sentAt?: string
+  viewedAt?: string
 }
 
 export interface ChecklistContent {
